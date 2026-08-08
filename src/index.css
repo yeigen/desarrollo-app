@@ -1,0 +1,33 @@
+:root{
+  box-sizing: border-box;
+  padding: 0;
+  background: #000;
+}
+
+.hola-mundo {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+h1 {
+  font-size: 100px;
+  text-shadow: 0 6px 4px#ff0000;
+  box-shadow: #000;
+  border: solid;
+
+}
+
+h2 {
+  font-size: 70px;
+  text-shadow: 0 6px 4px#00ff95;
+  box-shadow: 0 2px 2px rgba(255, 2, 213, 0.925)0;
+  border: solid;
+}
+
+h3 {
+  font-size: 70px;
+  text-shadow: 0 6px 4px#00d9ff;
+  box-shadow: 0 2px 2px rgba(2, 48, 255, 0.925)0;
+  border: solid;
+}
