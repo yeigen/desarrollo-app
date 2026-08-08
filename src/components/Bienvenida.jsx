@@ -1,10 +1,7 @@
-const Bienvenida20 = 'Solo Cristo tiene el CONTROLLL'
-
-function Bienvenida() {
+function Bienvenida({texto}) {
   return (
     <div className="hola-mundo">
-        <h2>BIENVENIDOOOOOOOOOO AMEN TE AMO</h2>
-        <h3>{Bienvenida20}</h3>
+        <h2>BIENVENIDOOOOOOOOOO {texto} </h2>
     </div>
   )
 }
