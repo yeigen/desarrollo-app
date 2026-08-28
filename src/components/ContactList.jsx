@@ -1,8 +1,10 @@
+import ContactItem from './ContactItem'
+
 function ContactList({ contacts }) {
   return (
     <ul>
       {contacts.map(contact => (
-        <li key={contact.id}>{contact.name} - {contact.phone}</li>
+        <ContactItem key={contact.id} contact={contact} />
       ))}
     </ul>
   )
