@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import initialContacts from '../data/contacts'
 
 function useContacts() {
   const [isLoading, setIsLoading] = useState(true)
@@ -6,10 +7,7 @@ function useContacts() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setContacts([
-        { id: 1, name: 'Ana Torres', phone: '3001234567' },
-        { id: 2, name: 'Luis Gomez', phone: '3009876543' },
-      ])
+      setContacts(initialContacts)
       setIsLoading(false)
     }, 1500)
 
