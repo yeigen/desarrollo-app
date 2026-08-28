@@ -8,6 +8,7 @@ function App() {
 
   return (
     <div>
+      <img src="/perrazo.webp" alt="Perro" />
       {isLoading
         ? <Loader />
         : (
