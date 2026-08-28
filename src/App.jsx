@@ -1,4 +1,5 @@
 import Loader from './components/Loader'
+import ContactList from './components/ContactList'
 import useContacts from './hooks/useContacts'
 
 function App() {
@@ -8,7 +9,7 @@ function App() {
     <div>
       {isLoading
         ? <Loader />
-        : contacts.map(contact => <p key={contact.id}>{contact.name}</p>)}
+        : <ContactList contacts={contacts} />}
     </div>
   )
 }
