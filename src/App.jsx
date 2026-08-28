@@ -3,13 +3,13 @@ import ContactList from './components/ContactList'
 import useContacts from './hooks/useContacts'
 
 function App() {
-  const { isLoading, contacts } = useContacts()
+  const { isLoading, contacts, deleteContact } = useContacts()
 
   return (
     <div>
       {isLoading
         ? <Loader />
-        : <ContactList contacts={contacts} />}
+        : <ContactList contacts={contacts} onDelete={deleteContact} />}
     </div>
   )
 }

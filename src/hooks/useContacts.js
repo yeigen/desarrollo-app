@@ -14,7 +14,11 @@ function useContacts() {
     return () => clearTimeout(timer)
   }, [])
 
-  return { isLoading, contacts }
+  function deleteContact(id) {
+    setContacts(prevContacts => prevContacts.filter(contact => contact.id !== id))
+  }
+
+  return { isLoading, contacts, deleteContact }
 }
 
 export default useContacts

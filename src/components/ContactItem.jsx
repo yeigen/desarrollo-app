@@ -1,6 +1,10 @@
-function ContactItem({ contact }) {
+function ContactItem({ contact, onDelete }) {
   return (
-    <li>{contact.name} - {contact.phone}</li>
+    <li>
+      {contact.name} - {contact.phone}
+      <button onClick={() => onDelete(contact.id)}>Eliminar</button>
+    </li>
   )
 }
+
 export default ContactItem
