@@ -1,15 +1,21 @@
 import Loader from './components/Loader'
 import ContactList from './components/ContactList'
+import ContactForm from './components/ContactForm'
 import useContacts from './hooks/useContacts'
 
 function App() {
-  const { isLoading, contacts, deleteContact } = useContacts()
+  const { isLoading, contacts, deleteContact, addContact } = useContacts()
 
   return (
     <div>
       {isLoading
         ? <Loader />
-        : <ContactList contacts={contacts} onDelete={deleteContact} />}
+        : (
+          <>
+            <ContactForm onAdd={addContact} />
+            <ContactList contacts={contacts} onDelete={deleteContact} />
+          </>
+        )}
     </div>
   )
 }

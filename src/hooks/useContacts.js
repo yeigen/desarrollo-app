@@ -18,7 +18,11 @@ function useContacts() {
     setContacts(prevContacts => prevContacts.filter(contact => contact.id !== id))
   }
 
-  return { isLoading, contacts, deleteContact }
+  function addContact(contact) {
+    setContacts(prevContacts => [...prevContacts, { ...contact, id: Date.now() }])
+  }
+
+  return { isLoading, contacts, deleteContact, addContact }
 }
 
 export default useContacts
