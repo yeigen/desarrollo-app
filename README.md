@@ -1,16 +1,32 @@
-# React + Vite
+# Contacticos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+App de contactos PWA para Agregar Contactos, amén.
 
-Currently, two official plugins are available:
+## Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+https://spectacular-mousse-e5e9e7.netlify.app/
 
-## React Compiler
+## Instalar en el celular
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Android (Chrome)
 
-## Expanding the ESLint configuration
+1. Abrir el link de arriba en Chrome.
+2. Tocar el menú (los tres puntos, arriba a la derecha).
+3. Elegir "Instalar app" o "Agregar a pantalla de inicio".
+4. Confirmar.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### iPhone (Safari)
+
+1. Abrir el link de arriba en Safari.
+2. Tocar el botón de compartir (el cuadradito con la flecha hacia arriba).
+3. Elegir "Agregar a pantalla de inicio".
+4. Confirmar.
+
+Queda instalada como una app más, con su ícono, y funciona sin conexión gracias al service worker.
+
+## Correr local
+
+```
+npm install
+npm run dev
+```
