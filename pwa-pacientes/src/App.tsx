@@ -1,48 +1,15 @@
-import { useState } from 'react'
+import Home from './components/Home'
 import Login from './components/Login'
-import type { Credentials } from './data/users'
-import {
-  authenticate,
-  clearSession,
-  loadSession,
-  saveSession,
-  type Session,
-} from './services/auth'
+import { useAuth } from './hooks/useAuth'
 
 function App() {
-  const [session, setSession] = useState<Session | null>(loadSession)
-  const [loginError, setLoginError] = useState<string>()
-
-  const handleLogin = (credentials: Credentials) => {
-    const user = authenticate(credentials)
-
-    if (!user) {
-      setLoginError('Usuario o contraseña incorrectos')
-      return
-    }
-
-    setLoginError(undefined)
-    setSession(saveSession(user))
-  }
-
-  const handleLogout = () => {
-    clearSession()
-    setSession(null)
-  }
+  const { session, loginError, login, logout } = useAuth()
 
   if (!session) {
-    return <Login onLogin={handleLogin} error={loginError} />
+    return <Login onLogin={login} error={loginError} />
   }
 
-  return (
-    <header>
-      <h1>MediClinic</h1>
-      <p>Hola, {session.name}</p>
-      <button type="button" onClick={handleLogout}>
-        Cerrar sesión
-      </button>
-    </header>
-  )
+  return <Home session={session} onLogout={logout} />
 }
 
 export default App
