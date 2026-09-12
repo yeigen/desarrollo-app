@@ -1,6 +1,7 @@
 import { useState, type SubmitEvent } from 'react'
 import type { Patient, PatientInput } from '../data/patients'
 import { validatePatient, type PatientErrors } from '../utils/validation'
+import { UserPlusIcon } from './icons'
 
 interface PatientFormProps {
   patients: Patient[]
@@ -56,25 +57,36 @@ function PatientForm({ patients, onSubmit }: PatientFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <form className="card" onSubmit={handleSubmit} noValidate>
       <h3>Nuevo paciente</h3>
 
-      {FIELDS.map((field) => (
-        <div key={field.name}>
-          <label htmlFor={field.name}>{field.label}</label>
-          <input
-            id={field.name}
-            name={field.name}
-            type={field.type}
-            inputMode={field.inputMode}
-            value={values[field.name]}
-            onChange={(event) => updateField(field.name, event.target.value)}
-          />
-          {errors[field.name] && <p role="alert">{errors[field.name]}</p>}
-        </div>
-      ))}
+      <div className="form-grid">
+        {FIELDS.map((field) => (
+          <div className="field" key={field.name}>
+            <label htmlFor={field.name}>{field.label}</label>
+            <input
+              id={field.name}
+              name={field.name}
+              type={field.type}
+              inputMode={field.inputMode}
+              value={values[field.name]}
+              onChange={(event) => updateField(field.name, event.target.value)}
+            />
+            {errors[field.name] && (
+              <p className="field-error" role="alert">
+                {errors[field.name]}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
 
-      <button type="submit">Agregar</button>
+      <div className="form-actions">
+        <button className="button button-primary" type="submit">
+          <UserPlusIcon />
+          Agregar
+        </button>
+      </div>
     </form>
   )
 }

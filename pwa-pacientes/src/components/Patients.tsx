@@ -16,11 +16,13 @@ function Patients() {
       : 'No se encontraron pacientes para la búsqueda.'
 
   return (
-    <section>
+    <section className="section">
       <h2>Pacientes</h2>
       <PatientForm patients={patients} onSubmit={addPatient} />
-      <PatientSearch value={query} onChange={setQuery} />
-      <PatientList patients={filteredPatients} emptyMessage={emptyMessage} />
+      <div className="card">
+        <PatientSearch value={query} onChange={setQuery} />
+        <PatientList patients={filteredPatients} emptyMessage={emptyMessage} />
+      </div>
     </section>
   )
 }

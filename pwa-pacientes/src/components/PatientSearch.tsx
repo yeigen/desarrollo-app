@@ -1,3 +1,5 @@
+import { MagnifyingGlassIcon } from './icons'
+
 interface PatientSearchProps {
   value: string
   onChange: (value: string) => void
@@ -5,15 +7,18 @@ interface PatientSearchProps {
 
 function PatientSearch({ value, onChange }: PatientSearchProps) {
   return (
-    <div>
+    <div className="field">
       <label htmlFor="search">Buscar</label>
-      <input
-        id="search"
-        type="search"
-        placeholder="Nombre, apellido o cédula"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-      />
+      <div className="search">
+        <MagnifyingGlassIcon />
+        <input
+          id="search"
+          type="search"
+          placeholder="Nombre, apellido o cédula"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      </div>
     </div>
   )
 }

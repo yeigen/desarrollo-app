@@ -7,30 +7,32 @@ interface PatientListProps {
 
 function PatientList({ patients, emptyMessage }: PatientListProps) {
   if (patients.length === 0) {
-    return <p>{emptyMessage}</p>
+    return <p className="empty">{emptyMessage}</p>
   }
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>CC</th>
-          <th>Teléfono</th>
-        </tr>
-      </thead>
-      <tbody>
-        {patients.map((patient) => (
-          <tr key={patient.id}>
-            <td>{patient.firstName}</td>
-            <td>{patient.lastName}</td>
-            <td>{patient.documentId}</td>
-            <td>{patient.phone}</td>
+    <div className="table-wrapper">
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>CC</th>
+            <th>Teléfono</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {patients.map((patient) => (
+            <tr key={patient.id}>
+              <td>{patient.firstName}</td>
+              <td>{patient.lastName}</td>
+              <td>{patient.documentId}</td>
+              <td>{patient.phone}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 }
 
