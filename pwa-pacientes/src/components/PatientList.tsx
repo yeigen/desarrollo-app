@@ -2,11 +2,12 @@ import type { Patient } from '../data/patients'
 
 interface PatientListProps {
   patients: Patient[]
+  emptyMessage: string
 }
 
-function PatientList({ patients }: PatientListProps) {
+function PatientList({ patients, emptyMessage }: PatientListProps) {
   if (patients.length === 0) {
-    return <p>No hay pacientes registrados.</p>
+    return <p>{emptyMessage}</p>
   }
 
   return (
