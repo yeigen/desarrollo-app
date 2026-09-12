@@ -1,19 +1,8 @@
-import { Navigate, Route } from 'react-router-dom'
-import {
-  IonApp,
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
-  setupIonicReact,
-} from '@ionic/react'
+import { IonApp, setupIonicReact } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
-import { calendarOutline, peopleOutline, personCircleOutline } from 'ionicons/icons'
-import Patients from './pages/Patients'
-import Profile from './pages/Profile'
-import Visits from './pages/Visits'
+import Tabs from './components/Tabs'
+import { useAuth } from './hooks/useAuth'
+import Login from './pages/Login'
 
 import '@ionic/react/css/core.css'
 import '@ionic/react/css/normalize.css'
@@ -31,31 +20,16 @@ import './theme/variables.css'
 setupIonicReact()
 
 function App() {
+  const { session, loginError, login, logout, clearLoginError } = useAuth()
+
   return (
     <IonApp>
       <IonReactRouter>
-        <IonTabs>
-          <IonRouterOutlet>
-            <Route path="/visitas" element={<Visits />} />
-            <Route path="/pacientes" element={<Patients />} />
-            <Route path="/perfil" element={<Profile />} />
-            <Route path="/" element={<Navigate to="/visitas" replace />} />
-          </IonRouterOutlet>
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="visitas" href="/visitas">
-              <IonIcon aria-hidden="true" icon={calendarOutline} />
-              <IonLabel>Visitas</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="pacientes" href="/pacientes">
-              <IonIcon aria-hidden="true" icon={peopleOutline} />
-              <IonLabel>Pacientes</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="perfil" href="/perfil">
-              <IonIcon aria-hidden="true" icon={personCircleOutline} />
-              <IonLabel>Perfil</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
+        {session ? (
+          <Tabs session={session} onLogout={logout} />
+        ) : (
+          <Login onLogin={login} error={loginError} onDismissError={clearLoginError} />
+        )}
       </IonReactRouter>
     </IonApp>
   )
