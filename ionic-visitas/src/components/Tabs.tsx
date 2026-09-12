@@ -35,7 +35,7 @@ function Tabs({ session, onLogout }: TabsProps) {
             <VisitDetail visits={visits} patients={patients} onAdvanceStatus={advanceStatus} />
           }
         />
-        <Route path="/pacientes" element={<Patients />} />
+        <Route path="/pacientes" element={<Patients patients={patients} />} />
         <Route path="/perfil" element={<Profile session={session} onLogout={onLogout} />} />
         <Route path="/" element={<Navigate to="/visitas" replace />} />
       </IonRouterOutlet>
