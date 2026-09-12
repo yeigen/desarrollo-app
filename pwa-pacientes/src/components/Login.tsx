@@ -1,9 +1,5 @@
 import { useState, type SubmitEvent } from 'react'
-
-export interface Credentials {
-  username: string
-  password: string
-}
+import type { Credentials } from '../data/users'
 
 interface LoginProps {
   onLogin: (credentials: Credentials) => void
