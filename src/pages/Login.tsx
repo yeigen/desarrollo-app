@@ -10,13 +10,15 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
+  useIonRouter,
 } from '@ionic/react'
-import { validateCredentials } from '../auth'
+import { login, validateCredentials } from '../auth'
 
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const router = useIonRouter()
 
   const handleLogin = () => {
     if (!validateCredentials(email.trim(), password)) {
@@ -24,6 +26,8 @@ function Login() {
       return
     }
     setError('')
+    login()
+    router.push('/home', 'root', 'replace')
   }
 
   return (
