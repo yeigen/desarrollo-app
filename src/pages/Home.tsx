@@ -1,6 +1,11 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { useState } from 'react'
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
+import TaskList from '../components/TaskList'
+import initialTasks from '../data/tasks'
 
-const Home: React.FC = () => {
+function Home() {
+  const [tasks] = useState(initialTasks)
+
   return (
     <IonPage>
       <IonHeader>
@@ -8,9 +13,11 @@ const Home: React.FC = () => {
           <IonTitle>Tareas</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent />
+      <IonContent>
+        <TaskList tasks={tasks} />
+      </IonContent>
     </IonPage>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
