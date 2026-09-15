@@ -1,11 +1,22 @@
 import { useState } from 'react'
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  useIonRouter,
+} from '@ionic/react'
 import TaskForm from '../components/TaskForm'
 import TaskList from '../components/TaskList'
 import initialTasks from '../data/tasks'
+import { logout } from '../auth'
 
 function Home() {
   const [tasks, setTasks] = useState(initialTasks)
+  const router = useIonRouter()
 
   const addTask = (title: string) => {
     setTasks([...tasks, { id: Date.now(), title, completed: false }])
@@ -21,11 +32,19 @@ function Home() {
     setTasks(tasks.filter(task => task.id !== id))
   }
 
+  const handleLogout = () => {
+    logout()
+    router.push('/login', 'root', 'replace')
+  }
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle>Tareas</IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={handleLogout}>Salir</IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent>
