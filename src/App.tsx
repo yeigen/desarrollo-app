@@ -2,6 +2,7 @@ import { Navigate, Route } from 'react-router-dom'
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 import Home from './pages/Home'
+import Login from './pages/Login'
 import '@ionic/react/css/core.css'
 import '@ionic/react/css/normalize.css'
 import '@ionic/react/css/structure.css'
@@ -21,6 +22,7 @@ function App() {
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
+          <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
         </IonRouterOutlet>
