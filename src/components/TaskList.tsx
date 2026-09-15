@@ -10,7 +10,7 @@ interface TaskListProps {
 
 function TaskList({ tasks, onToggle, onDelete }: TaskListProps) {
   return (
-    <IonList>
+    <IonList inset>
       {tasks.map(task => (
         <TaskItem key={task.id} task={task} onToggle={onToggle} onDelete={onDelete} />
       ))}

@@ -1,0 +1,8 @@
+.task-title::part(label) {
+  white-space: normal;
+}
+
+.completed::part(label) {
+  text-decoration: line-through;
+  color: #7a9bb0;
+}

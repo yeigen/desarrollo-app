@@ -1,5 +1,6 @@
 import { IonButton, IonCheckbox, IonItem } from '@ionic/react'
 import type { Task } from '../types'
+import './TaskItem.css'
 
 interface TaskItemProps {
   task: Task
@@ -11,6 +12,7 @@ function TaskItem({ task, onToggle, onDelete }: TaskItemProps) {
   return (
     <IonItem>
       <IonCheckbox
+        className={task.completed ? 'task-title completed' : 'task-title'}
         labelPlacement="end"
         justify="start"
         checked={task.completed}
