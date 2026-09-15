@@ -1,6 +1,6 @@
-describe('My First Test', () => {
-  it('Visits the app root url', () => {
+describe('Pantalla inicial', () => {
+  it('muestra el titulo de la app', () => {
     cy.visit('/')
-    cy.contains('#container', 'Ready to create an app?')
+    cy.contains('ion-title', 'Tareas')
   })
 })
