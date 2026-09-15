@@ -1,6 +1,6 @@
 describe('Pantalla inicial', () => {
-  it('muestra el titulo de la app', () => {
+  it('pide iniciar sesión cuando no hay sesión guardada', () => {
     cy.visit('/')
-    cy.contains('ion-title', 'Tareas')
+    cy.contains('ion-title', 'Iniciar sesión')
   })
 })
