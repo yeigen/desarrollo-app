@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Navigate } from 'react-router-dom'
 import {
   IonButton,
   IonContent,
@@ -12,13 +13,15 @@ import {
   IonToolbar,
   useIonRouter,
 } from '@ionic/react'
-import { login, validateCredentials } from '../auth'
+import { isLogged, login, validateCredentials } from '../auth'
 
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const router = useIonRouter()
+
+  if (isLogged()) return <Navigate to="/home" replace />
 
   const handleLogin = () => {
     if (!validateCredentials(email.trim(), password)) {

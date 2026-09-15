@@ -3,6 +3,7 @@ import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 import Home from './pages/Home'
 import Login from './pages/Login'
+import RequireAuth from './components/RequireAuth'
 import '@ionic/react/css/core.css'
 import '@ionic/react/css/normalize.css'
 import '@ionic/react/css/structure.css'
@@ -23,7 +24,14 @@ function App() {
       <IonReactRouter>
         <IonRouterOutlet>
           <Route path="/login" element={<Login />} />
-          <Route path="/home" element={<Home />} />
+          <Route
+            path="/home"
+            element={(
+              <RequireAuth>
+                <Home />
+              </RequireAuth>
+            )}
+          />
           <Route path="/" element={<Navigate to="/home" replace />} />
         </IonRouterOutlet>
       </IonReactRouter>
