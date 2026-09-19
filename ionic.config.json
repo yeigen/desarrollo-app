@@ -1,0 +1,7 @@
+{
+  "name": "ionic-tmp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
