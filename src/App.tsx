@@ -5,7 +5,11 @@ import CameraPage from './pages/CameraPage'
 import DevicePage from './pages/DevicePage'
 import FilesystemPage from './pages/FilesystemPage'
 import GeolocationPage from './pages/GeolocationPage'
+import HapticsPage from './pages/HapticsPage'
 import Home from './pages/Home'
+import LocalNotificationsPage from './pages/LocalNotificationsPage'
+import MotionPage from './pages/MotionPage'
+import PushNotificationsPage from './pages/PushNotificationsPage'
 import '@ionic/react/css/core.css'
 import '@ionic/react/css/normalize.css'
 import '@ionic/react/css/structure.css'
@@ -31,6 +35,10 @@ function App() {
           <Route path="/device" element={<DevicePage />} />
           <Route path="/filesystem" element={<FilesystemPage />} />
           <Route path="/geolocation" element={<GeolocationPage />} />
+          <Route path="/haptics" element={<HapticsPage />} />
+          <Route path="/local-notifications" element={<LocalNotificationsPage />} />
+          <Route path="/motion" element={<MotionPage />} />
+          <Route path="/push-notifications" element={<PushNotificationsPage />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
         </IonRouterOutlet>
       </IonReactRouter>
