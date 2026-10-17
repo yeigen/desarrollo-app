@@ -1,35 +1,23 @@
-import { useState } from 'react'
 import {
   IonButton,
   IonButtons,
   IonContent,
+  IonFab,
+  IonFabButton,
   IonHeader,
+  IonIcon,
   IonPage,
   IonTitle,
   IonToolbar,
 } from '@ionic/react'
-import TaskForm from '../components/TaskForm'
+import { add } from 'ionicons/icons'
 import TaskList from '../components/TaskList'
-import initialTasks from '../data/tasks'
 import { useAuth } from '../hooks/useAuth'
+import { useTasks } from '../hooks/useTasks'
 
 function Tasks() {
-  const [tasks, setTasks] = useState(initialTasks)
   const { user, logout } = useAuth()
-
-  const addTask = (title: string) => {
-    setTasks([...tasks, { id: Date.now(), title, completed: false }])
-  }
-
-  const toggleTask = (id: number) => {
-    setTasks(tasks.map(task => (
-      task.id === id ? { ...task, completed: !task.completed } : task
-    )))
-  }
-
-  const deleteTask = (id: number) => {
-    setTasks(tasks.filter(task => task.id !== id))
-  }
+  const { tasks } = useTasks()
 
   return (
     <IonPage>
@@ -43,8 +31,12 @@ function Tasks() {
       </IonHeader>
       <IonContent>
         <p className="ion-padding-horizontal">Sesión iniciada como {user?.email}</p>
-        <TaskForm onAdd={addTask} />
-        <TaskList tasks={tasks} onToggle={toggleTask} onDelete={deleteTask} />
+        <TaskList tasks={tasks} />
+        <IonFab slot="fixed" vertical="bottom" horizontal="end">
+          <IonFabButton routerLink="/tasks/new" aria-label="Agregar tarea">
+            <IonIcon icon={add} />
+          </IonFabButton>
+        </IonFab>
       </IonContent>
     </IonPage>
   )

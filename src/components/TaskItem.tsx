@@ -1,28 +1,20 @@
-import { IonButton, IonCheckbox, IonItem } from '@ionic/react'
+import { IonItem, IonLabel } from '@ionic/react'
+import TaskStatusBadge from './TaskStatusBadge'
 import type { Task } from '../types'
 import './TaskItem.css'
 
 interface TaskItemProps {
   task: Task
-  onToggle: (id: number) => void
-  onDelete: (id: number) => void
 }
 
-function TaskItem({ task, onToggle, onDelete }: TaskItemProps) {
+function TaskItem({ task }: TaskItemProps) {
   return (
-    <IonItem>
-      <IonCheckbox
-        className={task.completed ? 'task-title completed' : 'task-title'}
-        labelPlacement="end"
-        justify="start"
-        checked={task.completed}
-        onIonChange={() => onToggle(task.id)}
-      >
-        {task.title}
-      </IonCheckbox>
-      <IonButton slot="end" fill="clear" color="danger" onClick={() => onDelete(task.id)}>
-        Eliminar
-      </IonButton>
+    <IonItem routerLink={`/tasks/${task.id}`} detail>
+      <IonLabel className={task.completed ? 'completed' : undefined}>
+        <h2>{task.title}</h2>
+        {task.description && <p>{task.description}</p>}
+      </IonLabel>
+      <TaskStatusBadge completed={task.completed} />
     </IonItem>
   )
 }

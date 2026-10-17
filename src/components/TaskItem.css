@@ -1,8 +1,4 @@
-.task-title::part(label) {
-  white-space: normal;
-}
-
-.completed::part(label) {
+.completed h2 {
   text-decoration: line-through;
   color: #7a9bb0;
 }

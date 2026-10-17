@@ -1,33 +1,52 @@
-import { useState } from 'react'
-import { IonButton, IonInput, IonItem, IonList } from '@ionic/react'
+import { useState, type FormEvent } from 'react'
+import { IonButton, IonInput, IonItem, IonList, IonTextarea } from '@ionic/react'
+import type { TaskValues } from '../types'
 
 interface TaskFormProps {
-  onAdd: (title: string) => void
+  initialValues: TaskValues
+  onSave: (values: TaskValues) => void
 }
 
-function TaskForm({ onAdd }: TaskFormProps) {
-  const [title, setTitle] = useState('')
+function TaskForm({ initialValues, onSave }: TaskFormProps) {
+  const [title, setTitle] = useState(initialValues.title)
+  const [description, setDescription] = useState(initialValues.description)
+  const cleanTitle = title.trim()
 
-  const handleAdd = () => {
-    const cleanTitle = title.trim()
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault()
     if (!cleanTitle) return
-    onAdd(cleanTitle)
-    setTitle('')
+    onSave({ title: cleanTitle, description: description.trim() })
   }
 
   return (
-    <IonList inset>
-      <IonItem>
-        <IonInput
-          placeholder="Nueva tarea"
-          value={title}
-          onIonInput={e => setTitle(e.detail.value ?? '')}
-        />
-        <IonButton slot="end" onClick={handleAdd}>
-          Agregar
+    <form onSubmit={handleSubmit}>
+      <IonList inset>
+        <IonItem>
+          <IonInput
+            label="Título"
+            labelPlacement="stacked"
+            placeholder="¿Qué hay que hacer?"
+            value={title}
+            onIonInput={e => setTitle(e.detail.value ?? '')}
+          />
+        </IonItem>
+        <IonItem>
+          <IonTextarea
+            label="Descripción"
+            labelPlacement="stacked"
+            placeholder="Detalles de la tarea"
+            autoGrow
+            value={description}
+            onIonInput={e => setDescription(e.detail.value ?? '')}
+          />
+        </IonItem>
+      </IonList>
+      <div className="ion-padding-horizontal">
+        <IonButton type="submit" expand="block" disabled={!cleanTitle}>
+          Guardar
         </IonButton>
-      </IonItem>
-    </IonList>
+      </div>
+    </form>
   )
 }
 

@@ -4,15 +4,17 @@ import type { Task } from '../types'
 
 interface TaskListProps {
   tasks: Task[]
-  onToggle: (id: number) => void
-  onDelete: (id: number) => void
 }
 
-function TaskList({ tasks, onToggle, onDelete }: TaskListProps) {
+function TaskList({ tasks }: TaskListProps) {
+  if (tasks.length === 0) {
+    return <p className="ion-padding ion-text-center">No hay tareas todavía.</p>
+  }
+
   return (
     <IonList inset>
       {tasks.map(task => (
-        <TaskItem key={task.id} task={task} onToggle={onToggle} onDelete={onDelete} />
+        <TaskItem key={task.id} task={task} />
       ))}
     </IonList>
   )
