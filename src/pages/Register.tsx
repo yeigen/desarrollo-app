@@ -15,7 +15,7 @@ import { useAuth } from '../hooks/useAuth'
 function Register() {
   const { user, register } = useAuth()
 
-  if (user) return <Navigate to="/tasks" replace />
+  if (user) return <Navigate to="/tabs" replace />
 
   return (
     <IonPage>

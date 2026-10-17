@@ -1,6 +1,7 @@
-import { useState, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { TasksContext } from './TasksContext'
-import initialTasks from '../data/tasks'
+import { useCurrentUser } from '../hooks/useCurrentUser'
+import { useRealTimeCollection } from '../hooks/useRealTimeCollection'
 import type { Task, TaskValues } from '../types'
 
 interface TasksProviderProps {
@@ -8,22 +9,17 @@ interface TasksProviderProps {
 }
 
 function TasksProvider({ children }: TasksProviderProps) {
-  const [tasks, setTasks] = useState(initialTasks)
+  const user = useCurrentUser()
+  const { results, isPending, error, addItem, updateItem, removeItem } = useRealTimeCollection<Omit<Task, 'id'>>(
+    `tasks/${user.uid}`,
+  )
 
   const addTask = (values: TaskValues) => {
-    setTasks(current => [...current, { id: Date.now(), ...values, completed: false }])
-  }
-
-  const updateTask = (id: number, changes: Partial<Omit<Task, 'id'>>) => {
-    setTasks(current => current.map(task => (task.id === id ? { ...task, ...changes } : task)))
-  }
-
-  const deleteTask = (id: number) => {
-    setTasks(current => current.filter(task => task.id !== id))
+    addItem({ ...values, completed: false })
   }
 
   return (
-    <TasksContext value={{ tasks, addTask, updateTask, deleteTask }}>
+    <TasksContext value={{ tasks: results, isPending, error, addTask, updateTask: updateItem, deleteTask: removeItem }}>
       {children}
     </TasksContext>
   )

@@ -4,17 +4,18 @@ import type { TaskValues } from '../types'
 
 interface TaskFormProps {
   initialValues: TaskValues
+  disabled: boolean
   onSave: (values: TaskValues) => void
 }
 
-function TaskForm({ initialValues, onSave }: TaskFormProps) {
+function TaskForm({ initialValues, disabled, onSave }: TaskFormProps) {
   const [title, setTitle] = useState(initialValues.title)
   const [description, setDescription] = useState(initialValues.description)
   const cleanTitle = title.trim()
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    if (!cleanTitle) return
+    if (disabled || !cleanTitle) return
     onSave({ title: cleanTitle, description: description.trim() })
   }
 
@@ -42,7 +43,7 @@ function TaskForm({ initialValues, onSave }: TaskFormProps) {
         </IonItem>
       </IonList>
       <div className="ion-padding-horizontal">
-        <IonButton type="submit" expand="block" disabled={!cleanTitle}>
+        <IonButton type="submit" expand="block" disabled={disabled || !cleanTitle}>
           Guardar
         </IonButton>
       </div>

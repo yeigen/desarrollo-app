@@ -6,9 +6,7 @@ import TasksProvider from './context/TasksProvider'
 import RequireAuth from './components/RequireAuth'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import Tasks from './pages/Tasks'
-import TaskDetail from './pages/TaskDetail'
-import TaskEditor from './pages/TaskEditor'
+import Tabs from './pages/Tabs'
 import '@ionic/react/css/core.css'
 import '@ionic/react/css/normalize.css'
 import '@ionic/react/css/structure.css'
@@ -27,19 +25,23 @@ function App() {
   return (
     <IonApp>
       <AuthProvider>
-        <TasksProvider>
-          <IonReactRouter>
-            <IonRouterOutlet>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/tasks" element={<RequireAuth><Tasks /></RequireAuth>} />
-              <Route path="/tasks/new" element={<RequireAuth><TaskEditor /></RequireAuth>} />
-              <Route path="/tasks/:id" element={<RequireAuth><TaskDetail /></RequireAuth>} />
-              <Route path="/tasks/:id/edit" element={<RequireAuth><TaskEditor /></RequireAuth>} />
-              <Route path="/" element={<Navigate to="/tasks" replace />} />
-            </IonRouterOutlet>
-          </IonReactRouter>
-        </TasksProvider>
+        <IonReactRouter>
+          <IonRouterOutlet>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/tabs/*"
+              element={(
+                <RequireAuth>
+                  <TasksProvider>
+                    <Tabs />
+                  </TasksProvider>
+                </RequireAuth>
+              )}
+            />
+            <Route path="/" element={<Navigate to="/tabs" replace />} />
+          </IonRouterOutlet>
+        </IonReactRouter>
       </AuthProvider>
     </IonApp>
   )

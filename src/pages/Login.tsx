@@ -6,7 +6,7 @@ import { useAuth } from '../hooks/useAuth'
 function Login() {
   const { user, login } = useAuth()
 
-  if (user) return <Navigate to="/tasks" replace />
+  if (user) return <Navigate to="/tabs" replace />
 
   return (
     <IonPage>

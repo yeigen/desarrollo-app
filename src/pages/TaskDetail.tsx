@@ -9,33 +9,44 @@ import {
   IonLabel,
   IonList,
   IonPage,
+  IonSpinner,
   IonTitle,
   IonToolbar,
-  useIonAlert,
   useIonRouter,
 } from '@ionic/react'
+import NetworkStatus from '../components/NetworkStatus'
 import TaskStatusBadge from '../components/TaskStatusBadge'
+import { useConfirmDelete } from '../hooks/useConfirmDelete'
+import { useNetwork } from '../hooks/useNetwork'
 import { useTasks } from '../hooks/useTasks'
 
 function TaskDetail() {
   const { id } = useParams<{ id: string }>()
-  const { tasks, updateTask, deleteTask } = useTasks()
+  const { tasks, isPending, updateTask, deleteTask } = useTasks()
+  const { isOnline } = useNetwork()
   const router = useIonRouter()
-  const [presentAlert] = useIonAlert()
-  const task = tasks.find(item => item.id === Number(id))
+  const confirmDelete = useConfirmDelete()
+  const task = tasks.find(item => item.id === id)
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/tasks" />
+            <IonBackButton defaultHref="/tabs/tasks" />
           </IonButtons>
           <IonTitle>Detalle de la tarea</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {task ? (
+        <NetworkStatus />
+        {isPending && (
+          <div className="ion-padding ion-text-center">
+            <IonSpinner aria-label="Cargando tarea" />
+          </div>
+        )}
+        {!isPending && !task && <p className="ion-padding">La tarea no existe.</p>}
+        {task && (
           <>
             <div className="ion-padding">
               <h1>{task.title}</h1>
@@ -48,37 +59,35 @@ function TaskDetail() {
               </IonItem>
             </IonList>
             <div className="ion-padding-horizontal">
-              <IonButton expand="block" onClick={() => updateTask(task.id, { completed: !task.completed })}>
+              <IonButton
+                expand="block"
+                disabled={!isOnline}
+                onClick={() => updateTask(task.id, { completed: !task.completed })}
+              >
                 {task.completed ? 'Marcar como pendiente' : 'Marcar como completada'}
               </IonButton>
-              <IonButton expand="block" fill="outline" routerLink={`/tasks/${task.id}/edit`}>
+              <IonButton
+                expand="block"
+                fill="outline"
+                disabled={!isOnline}
+                routerLink={`/tabs/tasks/${task.id}/edit`}
+              >
                 Editar
               </IonButton>
               <IonButton
                 expand="block"
                 fill="clear"
                 color="danger"
-                onClick={() => presentAlert({
-                  header: `Eliminar "${task.title}"`,
-                  buttons: [
-                    { text: 'Volver', role: 'cancel' },
-                    {
-                      text: 'Eliminar tarea',
-                      role: 'destructive',
-                      handler: () => {
-                        router.goBack()
-                        deleteTask(task.id)
-                      },
-                    },
-                  ],
+                disabled={!isOnline}
+                onClick={() => confirmDelete(task.title, 'Eliminar tarea', () => {
+                  router.goBack()
+                  deleteTask(task.id)
                 })}
               >
                 Eliminar
               </IonButton>
             </div>
           </>
-        ) : (
-          <p className="ion-padding">La tarea no existe.</p>
         )}
       </IonContent>
     </IonPage>

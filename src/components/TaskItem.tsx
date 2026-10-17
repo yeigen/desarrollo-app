@@ -9,7 +9,7 @@ interface TaskItemProps {
 
 function TaskItem({ task }: TaskItemProps) {
   return (
-    <IonItem routerLink={`/tasks/${task.id}`} detail>
+    <IonItem routerLink={`/tabs/tasks/${task.id}`} detail>
       <IonLabel className={task.completed ? 'completed' : undefined}>
         <h2>{task.title}</h2>
         {task.description && <p>{task.description}</p>}
