@@ -14,3 +14,8 @@ export interface Contact {
 }
 
 export type ContactValues = Omit<Contact, 'id'>
+
+export interface Fruit {
+  id: number
+  name: string
+}
