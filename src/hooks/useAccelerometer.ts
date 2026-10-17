@@ -2,15 +2,13 @@ import { useEffect, useState } from 'react'
 import { Motion, type Acceleration } from '@capacitor/motion'
 import { measureMotion } from '../utils/measureMotion'
 
-const AT_REST: Acceleration = { x: 0, y: 0, z: 0 }
-
 export function useAccelerometer() {
-  const [acceleration, setAcceleration] = useState(AT_REST)
+  const [acceleration, setAcceleration] = useState<Acceleration | null>(null)
   const [isListening, setIsListening] = useState(false)
 
   useEffect(() => {
     if (!isListening) return
-    const listener = Motion.addListener('accel', event => setAcceleration(event.acceleration))
+    const listener = Motion.addListener('accel', event => setAcceleration(event.accelerationIncludingGravity))
     return () => {
       listener.then(handle => handle.remove())
     }
@@ -18,7 +16,7 @@ export function useAccelerometer() {
 
   return {
     acceleration,
-    ...measureMotion(acceleration),
+    motion: acceleration ? measureMotion(acceleration) : null,
     isListening,
     start: () => setIsListening(true),
     stop: () => setIsListening(false),

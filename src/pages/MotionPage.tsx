@@ -11,14 +11,17 @@ const MOTION_STATES = {
   shaking: { label: 'Sacudiendo', color: 'danger' },
 }
 
-const formatAcceleration = (value: number) => `${value.toFixed(DECIMALS)} m/s²`
+const NO_READINGS = { label: 'Sin lecturas', color: 'medium' }
+
+const formatAcceleration = (value?: number) => (value === undefined ? '-' : `${value.toFixed(DECIMALS)} m/s²`)
 
 function MotionPage() {
-  const { acceleration, magnitude, state, isListening, start, stop } = useAccelerometer()
-  const motionState = MOTION_STATES[state]
+  const { acceleration, motion, isListening, start, stop } = useAccelerometer()
+  const motionState = motion ? MOTION_STATES[motion.state] : NO_READINGS
 
   return (
     <SensorPage title="Movimiento">
+      <p>El movimiento es cuánto se aleja la aceleración medida de la gravedad (9.81 m/s²).</p>
       <IonButton expand="block" onClick={isListening ? stop : start}>
         {isListening ? 'Detener acelerómetro' : 'Iniciar acelerómetro'}
       </IonButton>
@@ -26,10 +29,10 @@ function MotionPage() {
         <h2 className="ion-text-center">{motionState.label}</h2>
       </IonText>
       <IonList>
-        <ValueItem label="Eje X" value={formatAcceleration(acceleration.x)} />
-        <ValueItem label="Eje Y" value={formatAcceleration(acceleration.y)} />
-        <ValueItem label="Eje Z" value={formatAcceleration(acceleration.z)} />
-        <ValueItem label="Magnitud" value={formatAcceleration(magnitude)} />
+        <ValueItem label="Eje X" value={formatAcceleration(acceleration?.x)} />
+        <ValueItem label="Eje Y" value={formatAcceleration(acceleration?.y)} />
+        <ValueItem label="Eje Z" value={formatAcceleration(acceleration?.z)} />
+        <ValueItem label="Movimiento" value={formatAcceleration(motion?.magnitude)} />
       </IonList>
     </SensorPage>
   )
