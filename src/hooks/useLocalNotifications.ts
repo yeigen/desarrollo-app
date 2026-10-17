@@ -22,7 +22,9 @@ export function useLocalNotifications() {
   })
 
   const notifyNow = (title: string, body: string) => run(async () => {
-    await LocalNotifications.schedule({ notifications: [{ id: nextNotificationId(), title, body }] })
+    await LocalNotifications.schedule({
+      notifications: [{ id: nextNotificationId(), title, body, isExactNotification: false }],
+    })
   })
 
   const notifyIn = (title: string, body: string, delayMs: number) => run(async () => {
