@@ -2,10 +2,13 @@ import { Capacitor } from '@capacitor/core'
 import { initializeApp } from 'firebase/app'
 import { getAnalytics } from 'firebase/analytics'
 import { getAuth, indexedDBLocalPersistence, initializeAuth } from 'firebase/auth'
+import { getDatabase } from 'firebase/database'
+import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBwhj6jZqpcrNDQ10DWLxpUKqfmKUTUdbM',
   authDomain: 'desarrollo-app-a610b.firebaseapp.com',
+  databaseURL: 'https://desarrollo-app-a610b-default-rtdb.firebaseio.com',
   projectId: 'desarrollo-app-a610b',
   storageBucket: 'desarrollo-app-a610b.firebasestorage.app',
   messagingSenderId: '27513252891',
@@ -18,5 +21,7 @@ const analytics = getAnalytics(app)
 const auth = Capacitor.isNativePlatform()
   ? initializeAuth(app, { persistence: indexedDBLocalPersistence })
   : getAuth(app)
+const firestore = getFirestore(app)
+const database = getDatabase(app)
 
-export { app, analytics, auth }
+export { app, analytics, auth, firestore, database }
