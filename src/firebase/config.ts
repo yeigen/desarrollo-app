@@ -1,6 +1,7 @@
+import { Capacitor } from '@capacitor/core'
 import { initializeApp } from 'firebase/app'
 import { getAnalytics } from 'firebase/analytics'
-import { getAuth } from 'firebase/auth'
+import { getAuth, indexedDBLocalPersistence, initializeAuth } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBwhj6jZqpcrNDQ10DWLxpUKqfmKUTUdbM',
@@ -14,6 +15,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const analytics = getAnalytics(app)
-const auth = getAuth(app)
+const auth = Capacitor.isNativePlatform()
+  ? initializeAuth(app, { persistence: indexedDBLocalPersistence })
+  : getAuth(app)
 
 export { app, analytics, auth }
