@@ -7,16 +7,15 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  useIonRouter,
 } from '@ionic/react'
 import TaskForm from '../components/TaskForm'
 import TaskList from '../components/TaskList'
 import initialTasks from '../data/tasks'
-import { logout } from '../auth'
+import { useAuth } from '../hooks/useAuth'
 
-function Home() {
+function Tasks() {
   const [tasks, setTasks] = useState(initialTasks)
-  const router = useIonRouter()
+  const { user, logout } = useAuth()
 
   const addTask = (title: string) => {
     setTasks([...tasks, { id: Date.now(), title, completed: false }])
@@ -32,22 +31,18 @@ function Home() {
     setTasks(tasks.filter(task => task.id !== id))
   }
 
-  const handleLogout = () => {
-    logout()
-    router.push('/login', 'root', 'replace')
-  }
-
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle>Tareas</IonTitle>
           <IonButtons slot="end">
-            <IonButton onClick={handleLogout}>Salir</IonButton>
+            <IonButton onClick={logout}>Salir</IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <p className="ion-padding-horizontal">Sesión iniciada como {user?.email}</p>
         <TaskForm onAdd={addTask} />
         <TaskList tasks={tasks} onToggle={toggleTask} onDelete={deleteTask} />
       </IonContent>
@@ -55,4 +50,4 @@ function Home() {
   )
 }
 
-export default Home
+export default Tasks
