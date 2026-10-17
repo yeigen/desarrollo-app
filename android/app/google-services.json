@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "27513252891",
+    "firebase_url": "https://desarrollo-app-a610b-default-rtdb.firebaseio.com",
+    "project_id": "desarrollo-app-a610b",
+    "storage_bucket": "desarrollo-app-a610b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27513252891:android:b4587ed61e8c2f15a3dcbe",
+        "android_client_info": {
+          "package_name": "com.yeigen.sensores"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "27513252891-uisgu67ktpaqminjhc7gtu3h38baqju1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQwdbGcxBRcOCklndLoRFcqJ6d5C-zGTQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27513252891-uisgu67ktpaqminjhc7gtu3h38baqju1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

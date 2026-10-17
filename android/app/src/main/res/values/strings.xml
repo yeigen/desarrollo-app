@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">sensores</string>
+    <string name="title_activity_main">sensores</string>
+    <string name="package_name">com.yeigen.sensores</string>
+    <string name="custom_url_scheme">com.yeigen.sensores</string>
+</resources>
