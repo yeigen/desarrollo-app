@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Directory, Encoding, Filesystem, type FileInfo } from '@capacitor/filesystem'
 import { usePluginCall } from './usePluginCall'
 
-const DIRECTORY = Directory.Data
+const DIRECTORY = Directory.Documents
 
 export function useFilesystem() {
   const [files, setFiles] = useState<FileInfo[]>([])
@@ -10,6 +10,7 @@ export function useFilesystem() {
   const { error, run } = usePluginCall()
 
   const loadFiles = useCallback(async () => {
+    await Filesystem.requestPermissions()
     const result = await Filesystem.readdir({ path: '', directory: DIRECTORY })
     setFiles(result.files.filter(file => file.type === 'file'))
   }, [])

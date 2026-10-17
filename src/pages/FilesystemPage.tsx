@@ -13,7 +13,7 @@ function FilesystemPage() {
 
   return (
     <SensorPage title="Archivos" error={error}>
-      <p>Guarda una nota como JSON en la carpeta privada de la app.</p>
+      <p>Guarda una nota como JSON en la carpeta Documentos del celular.</p>
       <IonList>
         <IonItem>
           <IonInput
