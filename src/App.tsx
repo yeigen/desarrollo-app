@@ -1,6 +1,10 @@
 import { Navigate, Route } from 'react-router-dom'
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
+import CameraPage from './pages/CameraPage'
+import DevicePage from './pages/DevicePage'
+import FilesystemPage from './pages/FilesystemPage'
+import GeolocationPage from './pages/GeolocationPage'
 import Home from './pages/Home'
 import '@ionic/react/css/core.css'
 import '@ionic/react/css/normalize.css'
@@ -23,6 +27,10 @@ function App() {
       <IonReactRouter>
         <IonRouterOutlet>
           <Route path="/home" element={<Home />} />
+          <Route path="/camera" element={<CameraPage />} />
+          <Route path="/device" element={<DevicePage />} />
+          <Route path="/filesystem" element={<FilesystemPage />} />
+          <Route path="/geolocation" element={<GeolocationPage />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
         </IonRouterOutlet>
       </IonReactRouter>
