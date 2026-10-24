@@ -4,31 +4,34 @@ import { Mail } from 'lucide-react'
 import Avatar from '../shared/Avatar'
 import SectionLabel from '../shared/SectionLabel'
 import Sheet from '../shared/Sheet'
-import { nameFromEmail } from '../../helpers/format'
+import type { Person } from '../../context/BudgetContext'
 import { isValidEmail } from '../../helpers/validation'
 import styles from './ShareSheet.module.scss'
 
 interface ShareSheetProps {
   isOpen: boolean
-  owner: string
-  invited: string[]
-  onInvite: (email: string) => void
+  ownerId: string
+  people: Person[]
+  onInvite: (email: string) => Promise<string>
   onClose: () => void
 }
 
-function ShareSheet({ isOpen, owner, invited, onInvite, onClose }: ShareSheetProps) {
+function ShareSheet({ isOpen, ownerId, people, onInvite, onClose }: ShareSheetProps) {
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
+  const [pending, setPending] = useState(false)
 
-  const invite = (event: FormEvent) => {
+  const invite = async (event: FormEvent) => {
     event.preventDefault()
     if (!isValidEmail(email)) {
       setError('Escribe un correo válido.')
       return
     }
-    onInvite(email.trim().toLowerCase())
-    setEmail('')
-    setError('')
+    setPending(true)
+    const message = await onInvite(email.trim().toLowerCase())
+    setPending(false)
+    setError(message)
+    if (!message) setEmail('')
   }
 
   return (
@@ -49,28 +52,24 @@ function ShareSheet({ isOpen, owner, invited, onInvite, onClose }: ShareSheetPro
             <Mail size={16} />
           </span>
         </IonInput>
-        <IonButton type="submit">Invitar</IonButton>
+        <IonButton type="submit" disabled={pending}>Invitar</IonButton>
       </form>
 
       <SectionLabel>Quién tiene acceso</SectionLabel>
       <ul className={styles.people}>
-        <li className={styles.person}>
-          <Avatar name={owner} />
-          <div className={styles.info}>
-            <p className={styles.name}>{owner} (tú)</p>
-            <p className={styles.detail}>Es tu presupuesto</p>
-          </div>
-        </li>
-        {invited.map((person) => (
-          <li key={person} className={styles.person}>
-            <Avatar name={nameFromEmail(person)} />
-            <div className={styles.info}>
-              <p className={styles.name}>{nameFromEmail(person)}</p>
-              <p className={styles.detail}>{person}</p>
-            </div>
-            <span className={styles.detail}>Invitación enviada</span>
-          </li>
-        ))}
+        {people.map((person) => {
+          const isOwner = person.id === ownerId
+          return (
+            <li key={person.id} className={styles.person}>
+              <Avatar name={person.name} />
+              <div className={styles.info}>
+                <p className={styles.name}>{isOwner ? `${person.name} (tú)` : person.name}</p>
+                <p className={styles.detail}>{isOwner ? 'Es tu presupuesto' : person.email}</p>
+              </div>
+              {!isOwner && <span className={styles.detail}>Puede editar</span>}
+            </li>
+          )
+        })}
       </ul>
     </Sheet>
   )

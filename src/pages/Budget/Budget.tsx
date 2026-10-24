@@ -6,7 +6,7 @@ import ShareSheet from '../../components/budget/ShareSheet'
 import StoreSection from '../../components/budget/StoreSection'
 import EmptyState from '../../components/shared/EmptyState'
 import Header from '../../components/shared/Header'
-import { nameFromEmail } from '../../helpers/format'
+import { firstName } from '../../helpers/format'
 import { STORES } from '../../helpers/stores'
 import { useAuth } from '../../hooks/useAuth'
 import { useBudget } from '../../hooks/useBudget'
@@ -14,25 +14,22 @@ import styles from './Budget.module.scss'
 
 function Budget() {
   const { user } = useAuth()
-  const { items, count, total, setQuantity, clear } = useBudget()
+  const { ownerId, people, items, loading, count, total, setQuantity, clear, invite } = useBudget()
   const [presentAlert] = useIonAlert()
   const [shareOpen, setShareOpen] = useState(false)
-  const [invited, setInvited] = useState<string[]>([])
   const [collapsed, setCollapsed] = useState<string[]>([])
 
-  const owner = user?.name ?? ''
+  const sharedWith = people.filter((person) => person.id !== user?.id).map((person) => firstName(person.name))
   const groups = STORES.map((store) => ({ store: store.id, items: items.filter((item) => item.offer.store === store.id) }))
     .filter((group) => group.items.length > 0)
   const stores = groups.map((group) => group.store)
-
-  const invite = (email: string) => setInvited((current) => (current.includes(email) ? current : [...current, email]))
 
   const changeExpanded = (expanded: string[]) => setCollapsed(stores.filter((store) => !expanded.includes(store)))
 
   const confirmClear = () =>
     presentAlert({
       header: '¿Vaciar presupuesto?',
-      message: invited.length > 0
+      message: sharedWith.length > 0
         ? 'Se eliminarán todos los productos. Las personas con acceso también lo verán vacío.'
         : 'Se eliminarán todos los productos.',
       buttons: [
@@ -52,7 +49,7 @@ function Budget() {
         }
       />
       <IonContent>
-        {items.length === 0 ? (
+        {loading ? null : items.length === 0 ? (
           <EmptyState
             icon={<ShoppingBasket size={32} />}
             title="Tu presupuesto está vacío"
@@ -60,7 +57,7 @@ function Budget() {
           />
         ) : (
           <div className={styles.content}>
-            <BudgetSummary total={total} count={count} owner={owner} members={invited.map(nameFromEmail)} />
+            <BudgetSummary total={total} count={count} people={people} sharedWith={sharedWith} />
             <IonAccordionGroup
               multiple
               className={styles.sections}
@@ -82,7 +79,7 @@ function Budget() {
           </div>
         )}
 
-        <ShareSheet isOpen={shareOpen} owner={owner} invited={invited} onInvite={invite} onClose={() => setShareOpen(false)} />
+        <ShareSheet isOpen={shareOpen} ownerId={ownerId} people={people} onInvite={invite} onClose={() => setShareOpen(false)} />
       </IonContent>
     </IonPage>
   )

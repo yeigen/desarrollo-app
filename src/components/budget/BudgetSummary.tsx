@@ -1,28 +1,27 @@
 import Avatar from '../shared/Avatar'
+import type { Person } from '../../context/BudgetContext'
 import { formatCount, formatList, formatPrice } from '../../helpers/format'
 import styles from './BudgetSummary.module.scss'
 
 interface BudgetSummaryProps {
   total: number
   count: number
-  owner: string
-  members: string[]
+  people: Person[]
+  sharedWith: string[]
 }
 
-function BudgetSummary({ total, count, owner, members }: BudgetSummaryProps) {
-  const firstNames = members.map((name) => name.split(' ')[0])
-
+function BudgetSummary({ total, count, people, sharedWith }: BudgetSummaryProps) {
   return (
     <section className={styles.summary}>
       <p className={styles.label}>Total estimado · {formatCount(count, 'producto', 'productos')}</p>
       <p className={styles.total}>{formatPrice(total)}</p>
-      {members.length > 0 && (
+      {sharedWith.length > 0 && (
         <div className={styles.shared}>
           <span className={styles.avatars}>
-            {[owner, ...members].map((name) => <Avatar key={name} name={name} />)}
+            {people.map((person) => <Avatar key={person.id} name={person.name} />)}
           </span>
           <span className={styles.dot} />
-          Compartido con {formatList(firstNames)} · en vivo
+          Compartido con {formatList(sharedWith)} · en vivo
         </div>
       )}
     </section>

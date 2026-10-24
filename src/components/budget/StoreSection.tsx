@@ -2,6 +2,7 @@ import { IonAccordion, IonItem, IonLabel } from '@ionic/react'
 import BudgetItemRow from './BudgetItemRow'
 import StoreLogo from '../shared/StoreLogo'
 import type { BudgetItem } from '../../context/BudgetContext'
+import { countUnits, totalPrice } from '../../helpers/budget'
 import { formatCount, formatPrice } from '../../helpers/format'
 import { offerKey } from '../../helpers/offers'
 import { storeName } from '../../helpers/stores'
@@ -15,8 +16,8 @@ interface StoreSectionProps {
 }
 
 function StoreSection({ store, items, onQuantityChange }: StoreSectionProps) {
-  const units = items.reduce((sum, item) => sum + item.quantity, 0)
-  const subtotal = items.reduce((sum, item) => sum + item.offer.price * item.quantity, 0)
+  const units = countUnits(items)
+  const subtotal = totalPrice(items)
 
   return (
     <IonAccordion value={store} className={styles.section} style={{ borderLeftColor: `var(--store-${store})` }}>

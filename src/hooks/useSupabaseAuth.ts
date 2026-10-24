@@ -32,7 +32,7 @@ export function useSupabaseAuth(): AuthContextValue {
 
   const user: User | null =
     session && profile?.id === session.user.id
-      ? { name: profile.name, email: session.user.email ?? '', role: profile.role }
+      ? { id: profile.id, name: profile.name, email: session.user.email ?? '', role: profile.role }
       : null
 
   const signIn = async (email: string, password: string) => {

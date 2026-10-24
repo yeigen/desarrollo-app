@@ -14,7 +14,7 @@ function AppRoutes() {
     <IonRouterOutlet>
       <Route path="/login" element={user ? <Navigate to="/tabs" replace /> : <Login />} />
       <Route path="/signup" element={user ? <Navigate to="/tabs" replace /> : <Signup />} />
-      <Route path="/tabs/*" element={user ? <BudgetProvider><UserRoutes /></BudgetProvider> : redirect} />
+      <Route path="/tabs/*" element={user ? <BudgetProvider ownerId={user.id}><UserRoutes /></BudgetProvider> : redirect} />
       <Route path="*" element={redirect} />
     </IonRouterOutlet>
   )

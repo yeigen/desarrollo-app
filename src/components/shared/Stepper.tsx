@@ -1,5 +1,6 @@
 import { IonButton } from '@ionic/react'
 import { Minus, Plus } from 'lucide-react'
+import { MAX_QUANTITY } from '../../helpers/budget'
 import styles from './Stepper.module.scss'
 
 interface StepperProps {
@@ -14,7 +15,7 @@ function Stepper({ quantity, onChange }: StepperProps) {
         <Minus size={16} />
       </IonButton>
       <span className={styles.quantity}>{quantity}</span>
-      <IonButton fill="clear" className={styles.button} aria-label="Agregar uno" onClick={() => onChange(quantity + 1)}>
+      <IonButton fill="clear" className={styles.button} aria-label="Agregar uno" disabled={quantity >= MAX_QUANTITY} onClick={() => onChange(quantity + 1)}>
         <Plus size={16} />
       </IonButton>
     </div>
