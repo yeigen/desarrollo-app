@@ -1,0 +1,75 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.card {
+  border-radius: var(--app-radius);
+  background: var(--app-card);
+  box-shadow: var(--app-shadow-card);
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.name {
+  margin: 12px 0 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.email {
+  margin: 0;
+  font-size: 14px;
+  color: var(--app-muted-foreground);
+}
+
+.role {
+  margin-top: 8px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--app-secondary);
+  color: var(--app-secondary-foreground);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.shared {
+  padding: 0 16px 16px;
+}
+
+.empty {
+  margin: 0;
+  font-size: 14px;
+  color: var(--app-muted-foreground);
+}
+
+.setting {
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  padding: 0 16px;
+
+  ion-toggle {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+:root .signOut {
+  --color: var(--ion-color-danger);
+  min-height: 48px;
+  margin: 0;
+}
+
+.buttonIcon {
+  margin-right: 8px;
+}

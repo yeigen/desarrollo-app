@@ -1,11 +1,59 @@
-import { IonContent, IonPage } from '@ionic/react'
+import { IonButton, IonContent, IonPage, IonToggle, useIonAlert } from '@ionic/react'
+import { LogOut } from 'lucide-react'
+import Avatar from '../../components/shared/Avatar'
 import Header from '../../components/shared/Header'
+import SectionLabel from '../../components/shared/SectionLabel'
+import { useAuth } from '../../hooks/useAuth'
+import { useSettings } from '../../hooks/useSettings'
+import styles from './Profile.module.scss'
+
+const ROLE_LABELS = { user: 'Usuario', admin: 'Administrador' }
 
 function Profile() {
+  const { user, signOut } = useAuth()
+  const { vibrate, setVibrate } = useSettings()
+  const [presentAlert] = useIonAlert()
+  const name = user?.name ?? ''
+
+  const confirmSignOut = () =>
+    presentAlert({
+      header: '¿Cerrar sesión?',
+      message: 'Tendrás que volver a entrar para ver tu presupuesto.',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Cerrar sesión', role: 'destructive', handler: signOut },
+      ],
+    })
+
   return (
     <IonPage>
       <Header title="Perfil" />
-      <IonContent />
+      <IonContent>
+        <div className={styles.content}>
+          <section className={`${styles.card} ${styles.identity}`}>
+            <Avatar name={name} size="large" />
+            <h2 className={styles.name}>{name}</h2>
+            <p className={styles.email}>{user?.email}</p>
+            {user && <span className={styles.role}>{ROLE_LABELS[user.role]}</span>}
+          </section>
+
+          <section className={`${styles.card} ${styles.shared}`}>
+            <SectionLabel>Compartidos conmigo</SectionLabel>
+            <p className={styles.empty}>Todavía nadie ha compartido un presupuesto contigo.</p>
+          </section>
+
+          <section className={`${styles.card} ${styles.setting}`}>
+            <IonToggle checked={vibrate} justify="space-between" onIonChange={(event) => setVibrate(event.detail.checked)}>
+              Vibrar al agregar productos
+            </IonToggle>
+          </section>
+
+          <IonButton fill="outline" expand="block" className={styles.signOut} onClick={confirmSignOut}>
+            <LogOut size={16} className={styles.buttonIcon} />
+            Cerrar sesión
+          </IonButton>
+        </div>
+      </IonContent>
     </IonPage>
   )
 }
