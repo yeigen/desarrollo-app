@@ -1,0 +1,25 @@
+.stepper {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: 44px;
+  border-radius: var(--app-radius);
+  background: var(--app-secondary);
+  color: var(--app-secondary-foreground);
+}
+
+.button {
+  --color: var(--app-secondary-foreground);
+  --padding-start: 0;
+  --padding-end: 0;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+}
+
+.quantity {
+  min-width: 24px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+}
