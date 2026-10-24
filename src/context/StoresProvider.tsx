@@ -1,19 +1,15 @@
-import { useState, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { StoresContext } from './StoresContext'
+import { useSupabaseStores } from '../hooks/useSupabaseStores'
 
 interface StoresProviderProps {
   children: ReactNode
 }
 
 function StoresProvider({ children }: StoresProviderProps) {
-  const [disabled, setDisabled] = useState<string[]>([])
+  const stores = useSupabaseStores()
 
-  const isEnabled = (store: string) => !disabled.includes(store)
-
-  const setEnabled = (store: string, enabled: boolean) =>
-    setDisabled((current) => (enabled ? current.filter((item) => item !== store) : [...current, store]))
-
-  return <StoresContext value={{ isEnabled, setEnabled }}>{children}</StoresContext>
+  return <StoresContext value={stores}>{children}</StoresContext>
 }
 
 export default StoresProvider
