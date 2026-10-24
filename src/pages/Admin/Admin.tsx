@@ -7,16 +7,18 @@ import StoreLogo from '../../components/shared/StoreLogo'
 import Warning from '../../components/shared/Warning'
 import { formatNumber } from '../../helpers/format'
 import { STORES } from '../../helpers/stores'
+import { useAdminStats } from '../../hooks/useAdminStats'
 import { useStores } from '../../hooks/useStores'
 import styles from './Admin.module.scss'
 
-const EXAMPLE_STATS = [
-  { label: 'Usuarios registrados', value: 3482, icon: Users },
-  { label: 'Búsquedas de hoy', value: 1276, icon: ChartColumn },
-  { label: 'Presupuestos compartidos', value: 418, icon: Share2 },
-]
+const STAT_TILES = [
+  { key: 'users', label: 'Usuarios registrados', icon: Users },
+  { key: 'searches_today', label: 'Búsquedas de hoy', icon: ChartColumn },
+  { key: 'shared_budgets', label: 'Presupuestos compartidos', icon: Share2 },
+] as const
 
 function Admin() {
+  const stats = useAdminStats()
   const { isEnabled, setEnabled } = useStores()
   const [notice, setNotice] = useState('')
 
@@ -31,10 +33,10 @@ function Admin() {
       <IonContent>
         <div className={styles.content}>
           <div className={styles.stats}>
-            {EXAMPLE_STATS.map(({ label, value, icon: Icon }) => (
-              <div key={label} className={styles.stat}>
+            {STAT_TILES.map(({ key, label, icon: Icon }) => (
+              <div key={key} className={styles.stat}>
                 <Icon size={20} className={styles.statIcon} />
-                <p className={styles.statValue}>{formatNumber(value)}</p>
+                <p className={styles.statValue}>{stats ? formatNumber(stats[key]) : '—'}</p>
                 <p className={styles.statLabel}>{label}</p>
               </div>
             ))}
