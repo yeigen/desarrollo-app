@@ -3,6 +3,7 @@ import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
 import type { BudgetContextValue, BudgetItem, Person } from '../context/BudgetContext'
 import { countUnits, totalPrice } from '../helpers/budget'
 import { offerKey } from '../helpers/offers'
+import { readCache, writeCache } from '../services/cache'
 import type { Offer } from '../services/compriceApi'
 import { supabase, uniqueChannel } from '../services/supabase'
 
@@ -10,6 +11,11 @@ interface ItemRow {
   offer_key: string
   offer: Offer
   quantity: number
+}
+
+interface CachedBudget {
+  items: BudgetItem[]
+  people: Person[]
 }
 
 const INVITE_ERRORS: Record<string, string> = {
@@ -58,11 +64,29 @@ export function useSupabaseBudget(ownerId: string): BudgetContextValue {
   const writes = useRef(Promise.resolve())
 
   useEffect(() => {
-    fetchItems(ownerId).then((data) => {
-      if (data) setItems(data)
+    let fetched = false
+
+    readCache<CachedBudget>(`budget:${ownerId}`).then((cached) => {
+      if (!cached || fetched) return
+      setItems(cached.items)
+      setPeople(cached.people)
       setLoading(false)
     })
-    fetchPeople(ownerId).then(setPeople)
+
+    const load = () => {
+      fetchItems(ownerId).then((data) => {
+        if (data) {
+          fetched = true
+          setItems(data)
+        }
+        setLoading(false)
+      })
+      fetchPeople(ownerId).then((data) => {
+        if (data.length > 0) setPeople(data)
+      })
+    }
+
+    load()
 
     const channel = uniqueChannel(`budget:${ownerId}`)
       .on<ItemRow>(
@@ -75,12 +99,18 @@ export function useSupabaseBudget(ownerId: string): BudgetContextValue {
         { event: 'INSERT', schema: 'public', table: 'budget_members', filter: `owner_id=eq.${ownerId}` },
         () => fetchPeople(ownerId).then(setPeople),
       )
-      .subscribe()
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') load()
+      })
 
     return () => {
       supabase.removeChannel(channel)
     }
   }, [ownerId])
+
+  useEffect(() => {
+    if (!loading) writeCache(`budget:${ownerId}`, { items, people })
+  }, [ownerId, items, people, loading])
 
   const write = (request: () => PromiseLike<{ error: unknown }>) => {
     writes.current = writes.current.then(async () => {

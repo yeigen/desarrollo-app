@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import type { AuthContextValue, Role, User } from '../context/AuthContext'
 import { authErrorMessage } from '../helpers/auth'
+import { clearCache, readCache, writeCache } from '../services/cache'
 import { supabase } from '../services/supabase'
+
+const PROFILE_KEY = 'profile'
 
 interface Profile {
   id: string
@@ -22,12 +25,19 @@ export function useSupabaseAuth(): AuthContextValue {
 
   useEffect(() => {
     if (!userId) return
+    readCache<Profile>(PROFILE_KEY).then((cached) => {
+      if (cached?.id === userId) setProfile((current) => (current?.id === userId ? current : cached))
+    })
     supabase
       .from('profiles')
       .select('id, name, role')
       .eq('id', userId)
-      .single()
-      .then(({ data }) => setProfile(data))
+      .single<Profile>()
+      .then(({ data }) => {
+        if (!data) return
+        setProfile(data)
+        writeCache(PROFILE_KEY, data)
+      })
   }, [userId])
 
   const user: User | null =
@@ -45,7 +55,10 @@ export function useSupabaseAuth(): AuthContextValue {
     return authErrorMessage(error)
   }
 
-  const signOut = () => supabase.auth.signOut()
+  const signOut = async () => {
+    await supabase.auth.signOut()
+    await clearCache()
+  }
 
   return { user, loading: session === undefined || (session !== null && !user), signIn, signUp, signOut }
 }

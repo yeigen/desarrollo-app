@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useIonViewWillEnter } from '@ionic/react'
 import type { BudgetItem } from '../context/BudgetContext'
 import { countUnits, totalPrice } from '../helpers/budget'
+import { readCache, writeCache } from '../services/cache'
 import { supabase, uniqueChannel } from '../services/supabase'
+
+const SHARED_KEY = 'sharedBudgets'
 
 export interface SharedBudget {
   ownerId: string
@@ -32,24 +35,40 @@ async function fetchSharedBudgets(userId: string) {
 
 export function useSharedBudgets(userId: string) {
   const [budgets, setBudgets] = useState<SharedBudget[]>([])
+  const fetched = useRef(false)
+
+  const load = useCallback(
+    () =>
+      fetchSharedBudgets(userId).then((data) => {
+        if (!data) return
+        fetched.current = true
+        setBudgets(data)
+        writeCache(SHARED_KEY, data)
+      }),
+    [userId],
+  )
 
   useIonViewWillEnter(() => {
-    fetchSharedBudgets(userId).then((data) => data && setBudgets(data))
+    load()
   })
 
   useEffect(() => {
+    readCache<SharedBudget[]>(SHARED_KEY).then((cached) => {
+      if (cached && !fetched.current) setBudgets(cached)
+    })
+
     const channel = uniqueChannel(`shared:${userId}`)
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'budget_members', filter: `member_id=eq.${userId}` },
-        () => fetchSharedBudgets(userId).then((data) => data && setBudgets(data)),
+        load,
       )
       .subscribe()
 
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [userId])
+  }, [userId, load])
 
   return budgets
 }
