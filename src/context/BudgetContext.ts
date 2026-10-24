@@ -9,8 +9,10 @@ export interface BudgetItem {
 export interface BudgetContextValue {
   items: BudgetItem[]
   count: number
+  total: number
   quantityOf: (offer: Offer) => number
   setQuantity: (offer: Offer, quantity: number) => void
+  clear: () => void
 }
 
 export const BudgetContext = createContext<BudgetContextValue | null>(null)

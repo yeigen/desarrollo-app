@@ -21,9 +21,13 @@ function BudgetProvider({ children }: BudgetProviderProps) {
       return next
     })
 
-  const count = items.reduce((total, item) => total + item.quantity, 0)
+  const clear = () => setItemsByKey({})
 
-  return <BudgetContext value={{ items, count, quantityOf, setQuantity }}>{children}</BudgetContext>
+  const count = items.reduce((sum, item) => sum + item.quantity, 0)
+
+  const total = items.reduce((sum, item) => sum + item.offer.price * item.quantity, 0)
+
+  return <BudgetContext value={{ items, count, total, quantityOf, setQuantity, clear }}>{children}</BudgetContext>
 }
 
 export default BudgetProvider
