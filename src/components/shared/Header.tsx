@@ -4,13 +4,15 @@ import styles from './Header.module.scss'
 
 interface HeaderProps {
   title: string
+  start?: ReactNode
   end?: ReactNode
 }
 
-function Header({ title, end }: HeaderProps) {
+function Header({ title, start, end }: HeaderProps) {
   return (
     <IonHeader className="ion-no-border">
       <IonToolbar className={styles.toolbar}>
+        {start && <IonButtons slot="start">{start}</IonButtons>}
         <IonTitle className={styles.title}>{title}</IonTitle>
         {end && <IonButtons slot="end">{end}</IonButtons>}
       </IonToolbar>

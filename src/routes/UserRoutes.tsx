@@ -6,6 +6,7 @@ import { TAB_BAR_ID } from '../config'
 import Budget from '../pages/Budget/Budget'
 import Profile from '../pages/Profile/Profile'
 import Search from '../pages/Search/Search'
+import SharedBudget from '../pages/SharedBudget/SharedBudget'
 import { useAuth } from '../hooks/useAuth'
 import { useBudget } from '../hooks/useBudget'
 
@@ -20,6 +21,7 @@ function UserRoutes() {
       <IonRouterOutlet>
         <Route path="search" element={<Search />} />
         <Route path="budget" element={<Budget />} />
+        <Route path="budget/:ownerId" element={<SharedBudget />} />
         <Route path="profile" element={<Profile />} />
         <Route path="admin/*" element={<AdminRoutes />} />
         <Route index element={<Navigate to="search" replace />} />

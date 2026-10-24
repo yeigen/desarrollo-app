@@ -1,10 +1,12 @@
-import { IonButton, IonContent, IonPage, IonToggle, useIonAlert } from '@ionic/react'
-import { LogOut } from 'lucide-react'
+import { IonButton, IonContent, IonItem, IonLabel, IonPage, IonToggle, useIonAlert } from '@ionic/react'
+import { LogOut, Users } from 'lucide-react'
 import Avatar from '../../components/shared/Avatar'
 import Header from '../../components/shared/Header'
 import SectionLabel from '../../components/shared/SectionLabel'
+import { formatCount, formatPrice } from '../../helpers/format'
 import { useAuth } from '../../hooks/useAuth'
 import { useSettings } from '../../hooks/useSettings'
+import { useSharedBudgets } from '../../hooks/useSharedBudgets'
 import styles from './Profile.module.scss'
 
 const ROLE_LABELS = { user: 'Usuario', admin: 'Administrador' }
@@ -12,6 +14,7 @@ const ROLE_LABELS = { user: 'Usuario', admin: 'Administrador' }
 function Profile() {
   const { user, signOut } = useAuth()
   const { vibrate, setVibrate } = useSettings()
+  const sharedBudgets = useSharedBudgets(user?.id ?? '')
   const [presentAlert] = useIonAlert()
   const name = user?.name ?? ''
 
@@ -39,7 +42,29 @@ function Profile() {
 
           <section className={`${styles.card} ${styles.shared}`}>
             <SectionLabel>Compartidos conmigo</SectionLabel>
-            <p className={styles.empty}>Todavía nadie ha compartido un presupuesto contigo.</p>
+            {sharedBudgets.length === 0 ? (
+              <p className={styles.empty}>Todavía nadie ha compartido un presupuesto contigo.</p>
+            ) : (
+              sharedBudgets.map((budget) => (
+                <IonItem
+                  key={budget.ownerId}
+                  button
+                  detail={false}
+                  lines="none"
+                  routerLink={`/tabs/budget/${budget.ownerId}`}
+                  className={styles.sharedBudget}
+                >
+                  <span slot="start" className={styles.sharedIcon}>
+                    <Users size={20} />
+                  </span>
+                  <IonLabel className={styles.sharedInfo}>
+                    <h3>{budget.ownerName}</h3>
+                    <p>{formatCount(budget.count, 'producto', 'productos')}</p>
+                  </IonLabel>
+                  <span slot="end" className={styles.sharedTotal}>{formatPrice(budget.total)}</span>
+                </IonItem>
+              ))
+            )}
           </section>
 
           <section className={`${styles.card} ${styles.setting}`}>

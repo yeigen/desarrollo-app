@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { IonAccordionGroup, IonButton, IonContent, IonPage, useIonAlert } from '@ionic/react'
-import { Share2, ShoppingBasket, Trash, TriangleAlert } from 'lucide-react'
+import { ArrowLeft, Share2, ShoppingBasket, Trash, TriangleAlert } from 'lucide-react'
 import BudgetSummary from '../../components/budget/BudgetSummary'
 import ShareSheet from '../../components/budget/ShareSheet'
 import StoreSection from '../../components/budget/StoreSection'
@@ -19,6 +19,8 @@ function Budget() {
   const [shareOpen, setShareOpen] = useState(false)
   const [collapsed, setCollapsed] = useState<string[]>([])
 
+  const isOwn = ownerId === user?.id
+  const owner = people.find((person) => person.id === ownerId)
   const sharedWith = people.filter((person) => person.id !== user?.id).map((person) => firstName(person.name))
   const groups = STORES.map((store) => ({ store: store.id, items: items.filter((item) => item.offer.store === store.id) }))
     .filter((group) => group.items.length > 0)
@@ -41,19 +43,32 @@ function Budget() {
   return (
     <IonPage>
       <Header
-        title="Presupuesto"
+        title={isOwn || !owner ? 'Presupuesto' : `Presupuesto de ${firstName(owner.name)}`}
+        start={
+          !isOwn && (
+            <IonButton fill="clear" color="medium" routerLink="/tabs/profile" routerDirection="back" aria-label="Volver">
+              <ArrowLeft size={20} />
+            </IonButton>
+          )
+        }
         end={
-          <IonButton fill="clear" color="primary" aria-label="Compartir" onClick={() => setShareOpen(true)}>
-            <Share2 size={20} />
-          </IonButton>
+          isOwn && (
+            <IonButton fill="clear" color="primary" aria-label="Compartir" onClick={() => setShareOpen(true)}>
+              <Share2 size={20} />
+            </IonButton>
+          )
         }
       />
       <IonContent>
         {loading ? null : items.length === 0 ? (
           <EmptyState
             icon={<ShoppingBasket size={32} />}
-            title="Tu presupuesto está vacío"
-            text="Busca productos en la pestaña Buscar y agrega la oferta más barata para empezar a ahorrar."
+            title={isOwn ? 'Tu presupuesto está vacío' : 'Este presupuesto está vacío'}
+            text={
+              isOwn
+                ? 'Busca productos en la pestaña Buscar y agrega la oferta más barata para empezar a ahorrar.'
+                : `Cuando ${firstName(owner?.name ?? '')} agregue productos, aparecerán aquí en vivo.`
+            }
           />
         ) : (
           <div className={styles.content}>
@@ -79,7 +94,9 @@ function Budget() {
           </div>
         )}
 
-        <ShareSheet isOpen={shareOpen} ownerId={ownerId} people={people} onInvite={invite} onClose={() => setShareOpen(false)} />
+        {isOwn && (
+          <ShareSheet isOpen={shareOpen} ownerId={ownerId} people={people} onInvite={invite} onClose={() => setShareOpen(false)} />
+        )}
       </IonContent>
     </IonPage>
   )
