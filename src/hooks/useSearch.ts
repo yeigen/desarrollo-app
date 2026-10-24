@@ -1,7 +1,10 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { readCache, writeCache } from '../services/cache'
 import { EMPTY_FILTERS, searchOffers, type SearchFilters, type SearchResult } from '../services/compriceApi'
 
 const MAX_RECENT_SEARCHES = 5
+
+const RECENT_KEY = 'recentSearches'
 
 export function useSearch() {
   const [query, setQuery] = useState('')
@@ -11,6 +14,10 @@ export function useSearch() {
   const [failed, setFailed] = useState(false)
   const [recent, setRecent] = useState<string[]>([])
   const lastRequest = useRef(0)
+
+  useEffect(() => {
+    readCache<string[]>(RECENT_KEY).then((saved) => saved && setRecent(saved))
+  }, [])
 
   const run = async (nextQuery: string, nextFilters: SearchFilters) => {
     const request = ++lastRequest.current
@@ -31,7 +38,9 @@ export function useSearch() {
   const search = (text: string) => {
     const nextQuery = text.trim()
     if (!nextQuery) return
-    setRecent((current) => [nextQuery, ...current.filter((item) => item !== nextQuery)].slice(0, MAX_RECENT_SEARCHES))
+    const nextRecent = [nextQuery, ...recent.filter((item) => item !== nextQuery)].slice(0, MAX_RECENT_SEARCHES)
+    setRecent(nextRecent)
+    writeCache(RECENT_KEY, nextRecent)
     run(nextQuery, filters)
   }
 
