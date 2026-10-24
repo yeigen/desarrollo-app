@@ -1,0 +1,21 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.field .input:global(.input-fill-outline) {
+  --background: var(--app-card);
+  --border-color: var(--app-input);
+  --border-radius: var(--app-radius);
+  --highlight-color-focused: var(--ion-color-primary);
+  --padding-start: 12px;
+  --padding-end: 4px;
+  min-height: 48px;
+  font-size: 16px;
+}
