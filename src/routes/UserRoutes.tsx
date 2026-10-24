@@ -9,12 +9,14 @@ import Search from '../pages/Search/Search'
 import SharedBudget from '../pages/SharedBudget/SharedBudget'
 import { useAuth } from '../hooks/useAuth'
 import { useBudget } from '../hooks/useBudget'
+import { usePushNotifications } from '../hooks/usePushNotifications'
 
 const ICON_PROPS = { size: 24, strokeWidth: 1.8 }
 
 function UserRoutes() {
   const { user } = useAuth()
-  const { count } = useBudget()
+  const { ownerId, count } = useBudget()
+  usePushNotifications(ownerId)
 
   return (
     <IonTabs>

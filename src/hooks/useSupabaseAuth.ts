@@ -3,6 +3,7 @@ import type { Session } from '@supabase/supabase-js'
 import type { AuthContextValue, Role, User } from '../context/AuthContext'
 import { authErrorMessage } from '../helpers/auth'
 import { clearCache, readCache, writeCache } from '../services/cache'
+import { removePushToken } from '../services/push'
 import { supabase } from '../services/supabase'
 
 const PROFILE_KEY = 'profile'
@@ -56,6 +57,7 @@ export function useSupabaseAuth(): AuthContextValue {
   }
 
   const signOut = async () => {
+    await removePushToken()
     await supabase.auth.signOut()
     await clearCache()
   }
