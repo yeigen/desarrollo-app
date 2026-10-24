@@ -46,24 +46,25 @@ Comparar el precio del mercado en Cali obliga a revisar la página de cada super
 ## 4. Arquitectura
 
 ```mermaid
-flowchart LR
-  App["App Ionic React + Capacitor<br/>(Android y navegador)"]
+flowchart TB
+  App["App Comprice<br/>Ionic React + Capacitor<br/>(Android y navegador)"]
   API["API de Comprice<br/>FastAPI en DigitalOcean"]
   Tiendas["Éxito, Carulla, Olímpica,<br/>Jumbo, D1 y Mercamío"]
   subgraph Supabase
+    direction TB
     Auth["Auth"]
     DB["Postgres con RLS"]
     RT["Realtime"]
-    Fn["Edge Function send-push"]
+    Fn["Edge Function<br/>send-push"]
   end
   FCM["Firebase Cloud Messaging"]
 
   App -- "GET /search" --> API
   API --> Tiendas
-  App -- "sesión" --> Auth
+  App -- "cuentas y sesión" --> Auth
   App -- "datos y funciones" --> DB
-  DB -- "cambios en vivo" --> RT
-  RT -- "WebSocket" --> App
+  DB -- "cambios" --> RT
+  RT -- "en vivo" --> App
   App -- "aviso de cambio" --> Fn
   Fn -- "tokens" --> DB
   Fn -- "HTTP v1" --> FCM
