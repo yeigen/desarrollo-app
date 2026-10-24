@@ -1,15 +1,17 @@
 import type { FormEvent, ReactNode } from 'react'
 import { IonContent, IonPage } from '@ionic/react'
+import { TriangleAlert } from 'lucide-react'
 import logo from '../../assets/logo.png'
 import styles from './AuthLayout.module.scss'
 
 interface AuthLayoutProps {
   onSubmit: () => void
   footer: ReactNode
+  error?: string
   children: ReactNode
 }
 
-function AuthLayout({ onSubmit, footer, children }: AuthLayoutProps) {
+function AuthLayout({ onSubmit, footer, error, children }: AuthLayoutProps) {
   const submit = (event: FormEvent) => {
     event.preventDefault()
     onSubmit()
@@ -23,6 +25,12 @@ function AuthLayout({ onSubmit, footer, children }: AuthLayoutProps) {
             <img src={logo} alt="Comprice" className={styles.logo} />
             <p className={styles.tagline}>Compara el precio de tu mercado en Cali</p>
           </div>
+          {error && (
+            <div role="alert" className={styles.alert}>
+              <TriangleAlert size={16} />
+              {error}
+            </div>
+          )}
           {children}
           <p className={styles.footer}>{footer}</p>
         </form>
