@@ -1,25 +1,15 @@
-import { useState, type ReactNode } from 'react'
-import { AuthContext, type User } from './AuthContext'
-
-const ADMIN_EMAIL = 'admin@comprice.co'
+import type { ReactNode } from 'react'
+import { AuthContext } from './AuthContext'
+import { useSupabaseAuth } from '../hooks/useSupabaseAuth'
 
 interface AuthProviderProps {
   children: ReactNode
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null)
+  const auth = useSupabaseAuth()
 
-  const signIn = (email: string) => {
-    const isAdmin = email.trim().toLowerCase() === ADMIN_EMAIL
-    setUser({ email, name: isAdmin ? 'Admin comprice' : 'Laura Gómez', role: isAdmin ? 'admin' : 'user' })
-  }
-
-  const signUp = (name: string, email: string) => setUser({ name, email, role: 'user' })
-
-  const signOut = () => setUser(null)
-
-  return <AuthContext value={{ user, signIn, signUp, signOut }}>{children}</AuthContext>
+  return <AuthContext value={auth}>{children}</AuthContext>
 }
 
 export default AuthProvider

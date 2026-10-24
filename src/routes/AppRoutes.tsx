@@ -7,17 +7,15 @@ import Signup from '../pages/Signup/Signup'
 import { useAuth } from '../hooks/useAuth'
 
 function AppRoutes() {
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
+  const redirect = loading ? null : <Navigate to={user ? '/tabs' : '/login'} replace />
 
   return (
     <IonRouterOutlet>
       <Route path="/login" element={user ? <Navigate to="/tabs" replace /> : <Login />} />
       <Route path="/signup" element={user ? <Navigate to="/tabs" replace /> : <Signup />} />
-      <Route
-        path="/tabs/*"
-        element={user ? <BudgetProvider><UserRoutes /></BudgetProvider> : <Navigate to="/login" replace />}
-      />
-      <Route path="*" element={<Navigate to={user ? '/tabs' : '/login'} replace />} />
+      <Route path="/tabs/*" element={user ? <BudgetProvider><UserRoutes /></BudgetProvider> : redirect} />
+      <Route path="*" element={redirect} />
     </IonRouterOutlet>
   )
 }
