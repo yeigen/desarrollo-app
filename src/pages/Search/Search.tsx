@@ -14,6 +14,7 @@ import { formatList } from '../../helpers/format'
 import { offerKey } from '../../helpers/offers'
 import { storeName } from '../../helpers/stores'
 import { useBudget } from '../../hooks/useBudget'
+import { useNetwork } from '../../hooks/useNetwork'
 import { useSearch } from '../../hooks/useSearch'
 import { useSettings } from '../../hooks/useSettings'
 import { useStores } from '../../hooks/useStores'
@@ -29,6 +30,7 @@ function Search() {
   const { quantityOf, setQuantity } = useBudget()
   const { vibrate } = useSettings()
   const { isEnabled } = useStores()
+  const connected = useNetwork()
   const [presentToast] = useIonToast()
   const [text, setText] = useState('')
   const [filtersOpen, setFiltersOpen] = useState(false)
@@ -142,6 +144,7 @@ function Search() {
                   offer={offer}
                   isBest={offer.price_per_unit === bestPricePerUnit}
                   quantity={quantityOf(offer)}
+                  disabled={!connected}
                   onAdd={() => add(offer)}
                   onQuantityChange={(quantity) => setQuantity(offer, quantity)}
                   onOpenImage={() => setZoomed(offer)}

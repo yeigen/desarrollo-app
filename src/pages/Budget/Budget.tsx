@@ -6,15 +6,18 @@ import ShareSheet from '../../components/budget/ShareSheet'
 import StoreSection from '../../components/budget/StoreSection'
 import EmptyState from '../../components/shared/EmptyState'
 import Header from '../../components/shared/Header'
+import Warning from '../../components/shared/Warning'
 import { firstName } from '../../helpers/format'
 import { STORES } from '../../helpers/stores'
 import { useAuth } from '../../hooks/useAuth'
 import { useBudget } from '../../hooks/useBudget'
+import { useNetwork } from '../../hooks/useNetwork'
 import styles from './Budget.module.scss'
 
 function Budget() {
   const { user } = useAuth()
   const { ownerId, people, items, loading, count, total, setQuantity, clear, invite } = useBudget()
+  const connected = useNetwork()
   const [presentAlert] = useIonAlert()
   const [shareOpen, setShareOpen] = useState(false)
   const [collapsed, setCollapsed] = useState<string[]>([])
@@ -53,13 +56,18 @@ function Budget() {
         }
         end={
           isOwn && (
-            <IonButton fill="clear" color="primary" aria-label="Compartir" onClick={() => setShareOpen(true)}>
+            <IonButton fill="clear" color="primary" aria-label="Compartir" disabled={!connected} onClick={() => setShareOpen(true)}>
               <Share2 size={20} />
             </IonButton>
           )
         }
       />
       <IonContent>
+        {!connected && (
+          <div className={styles.offline}>
+            <Warning>Sin conexión. Estás viendo la última copia guardada; podrás editar cuando vuelva la conexión.</Warning>
+          </div>
+        )}
         {loading ? null : items.length === 0 ? (
           <EmptyState
             icon={<ShoppingBasket size={32} />}
@@ -80,14 +88,20 @@ function Budget() {
               onIonChange={(event) => changeExpanded([event.detail.value ?? []].flat())}
             >
               {groups.map((group) => (
-                <StoreSection key={group.store} store={group.store} items={group.items} onQuantityChange={setQuantity} />
+                <StoreSection
+                  key={group.store}
+                  store={group.store}
+                  items={group.items}
+                  disabled={!connected}
+                  onQuantityChange={setQuantity}
+                />
               ))}
             </IonAccordionGroup>
             <p className={styles.note}>
               <TriangleAlert size={16} />
               Los precios son orientativos: la tienda recalcula envío, servicio y bolsa.
             </p>
-            <IonButton fill="clear" color="danger" expand="block" onClick={confirmClear}>
+            <IonButton fill="clear" color="danger" expand="block" disabled={!connected} onClick={confirmClear}>
               <Trash size={16} className={styles.buttonIcon} />
               Vaciar presupuesto
             </IonButton>

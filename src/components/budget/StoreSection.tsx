@@ -12,10 +12,11 @@ import styles from './StoreSection.module.scss'
 interface StoreSectionProps {
   store: string
   items: BudgetItem[]
+  disabled: boolean
   onQuantityChange: (offer: Offer, quantity: number) => void
 }
 
-function StoreSection({ store, items, onQuantityChange }: StoreSectionProps) {
+function StoreSection({ store, items, disabled, onQuantityChange }: StoreSectionProps) {
   const units = countUnits(items)
   const subtotal = totalPrice(items)
 
@@ -34,6 +35,7 @@ function StoreSection({ store, items, onQuantityChange }: StoreSectionProps) {
           <BudgetItemRow
             key={offerKey(item.offer)}
             item={item}
+            disabled={disabled}
             onQuantityChange={(quantity) => onQuantityChange(item.offer, quantity)}
           />
         ))}

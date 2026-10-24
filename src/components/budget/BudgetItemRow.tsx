@@ -8,10 +8,11 @@ import styles from './BudgetItemRow.module.scss'
 
 interface BudgetItemRowProps {
   item: BudgetItem
+  disabled: boolean
   onQuantityChange: (quantity: number) => void
 }
 
-function BudgetItemRow({ item, onQuantityChange }: BudgetItemRowProps) {
+function BudgetItemRow({ item, disabled, onQuantityChange }: BudgetItemRowProps) {
   const { offer, quantity } = item
 
   return (
@@ -21,8 +22,8 @@ function BudgetItemRow({ item, onQuantityChange }: BudgetItemRowProps) {
         <p className={styles.name}>{offer.name}</p>
         <p className={styles.meta}>{[offer.branch, formatPrice(offer.price)].filter(Boolean).join(' · ')}</p>
       </div>
-      <Stepper quantity={quantity} onChange={onQuantityChange} />
-      <IonButton fill="clear" color="danger" className={styles.remove} aria-label="Eliminar" onClick={() => onQuantityChange(0)}>
+      <Stepper quantity={quantity} disabled={disabled} onChange={onQuantityChange} />
+      <IonButton fill="clear" color="danger" className={styles.remove} aria-label="Eliminar" disabled={disabled} onClick={() => onQuantityChange(0)}>
         <Trash size={16} />
       </IonButton>
     </div>

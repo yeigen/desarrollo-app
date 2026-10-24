@@ -13,12 +13,13 @@ interface OfferCardProps {
   offer: Offer
   isBest: boolean
   quantity: number
+  disabled: boolean
   onAdd: () => void
   onQuantityChange: (quantity: number) => void
   onOpenImage: () => void
 }
 
-function OfferCard({ offer, isBest, quantity, onAdd, onQuantityChange, onOpenImage }: OfferCardProps) {
+function OfferCard({ offer, isBest, quantity, disabled, onAdd, onQuantityChange, onOpenImage }: OfferCardProps) {
   const details = [offer.brand, formatAmount(offer)].filter(Boolean).join(' · ')
   const meta = [formatPricePerUnit(offer), formatSeenAt(offer)].filter(Boolean).join(' · ')
 
@@ -46,9 +47,9 @@ function OfferCard({ offer, isBest, quantity, onAdd, onQuantityChange, onOpenIma
           {meta && <p className={styles.meta}>{meta}</p>}
         </div>
         {quantity > 0 ? (
-          <Stepper quantity={quantity} onChange={onQuantityChange} />
+          <Stepper quantity={quantity} disabled={disabled} onChange={onQuantityChange} />
         ) : (
-          <IonButton className={styles.add} onClick={onAdd}>
+          <IonButton className={styles.add} disabled={disabled} onClick={onAdd}>
             <Plus size={16} />
             Agregar
           </IonButton>
