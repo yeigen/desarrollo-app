@@ -1,0 +1,80 @@
+.label {
+  margin: 16px 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--app-muted-foreground);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  --background: var(--app-card);
+  --color: var(--ion-text-color);
+  gap: 6px;
+  min-height: 36px;
+  margin: 0;
+  border: 1px solid var(--app-border);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.active {
+  --background: var(--app-secondary);
+  --color: var(--app-secondary-foreground);
+  border-color: var(--ion-color-primary);
+}
+
+.segment {
+  --background: var(--app-muted);
+  padding: 4px;
+  border-radius: var(--app-radius);
+
+  ion-segment-button {
+    --border-radius: 12px;
+    --color: var(--app-muted-foreground);
+    --color-checked: var(--ion-color-primary);
+    --indicator-color: var(--app-card);
+    --padding-start: 4px;
+    --padding-end: 4px;
+    min-width: 0;
+    min-height: 40px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
+
+    &::part(indicator) {
+      top: 0;
+      height: 100%;
+    }
+
+    &::part(indicator-background) {
+      height: 100%;
+      border-radius: 12px;
+      box-shadow: var(--app-shadow-card);
+    }
+  }
+}
+
+.range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--app-muted-foreground);
+
+  .input:global(.input-fill-outline) {
+    --background: var(--app-card);
+    --border-color: var(--app-input);
+    --border-radius: var(--app-radius);
+    --padding-start: 12px;
+    flex: 1;
+    min-height: 44px;
+    font-size: 16px;
+  }
+}

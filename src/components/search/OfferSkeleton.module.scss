@@ -1,0 +1,41 @@
+.card {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--app-radius);
+  background: var(--app-card);
+  box-shadow: var(--app-shadow-card);
+}
+
+.thumbnail {
+  --border-radius: var(--app-radius);
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  margin: 0;
+}
+
+.lines {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  width: 66%;
+  height: 16px;
+  margin: 0;
+}
+
+.subtitle {
+  width: 50%;
+  height: 12px;
+  margin: 0;
+}
+
+.price {
+  width: 33%;
+  height: 20px;
+  margin: 0;
+}
