@@ -1,0 +1,23 @@
+.avatar {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--app-card);
+  border-radius: 50%;
+  background: var(--app-secondary);
+  color: var(--app-secondary-foreground);
+  font-weight: 700;
+}
+
+.small {
+  width: 32px;
+  height: 32px;
+  font-size: 11px;
+}
+
+.large {
+  width: 80px;
+  height: 80px;
+  font-size: 24px;
+}
