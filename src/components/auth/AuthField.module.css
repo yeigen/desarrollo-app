@@ -1,0 +1,15 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field ion-input {
+  --border-radius: 12px;
+  min-height: 48px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+}
