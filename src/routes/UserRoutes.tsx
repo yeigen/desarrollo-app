@@ -1,16 +1,19 @@
 import { Navigate, Route } from 'react-router-dom'
-import { IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react'
+import { IonBadge, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react'
 import { Search as SearchIcon, Shield, ShoppingBasket, User as UserIcon } from 'lucide-react'
 import AdminRoutes from './AdminRoutes'
+import { TAB_BAR_ID } from '../config'
 import Budget from '../pages/Budget/Budget'
 import Profile from '../pages/Profile/Profile'
 import Search from '../pages/Search/Search'
 import { useAuth } from '../hooks/useAuth'
+import { useBudget } from '../hooks/useBudget'
 
 const ICON_PROPS = { size: 24, strokeWidth: 1.8 }
 
 function UserRoutes() {
   const { user } = useAuth()
+  const { count } = useBudget()
 
   return (
     <IonTabs>
@@ -21,7 +24,7 @@ function UserRoutes() {
         <Route path="admin/*" element={<AdminRoutes />} />
         <Route index element={<Navigate to="search" replace />} />
       </IonRouterOutlet>
-      <IonTabBar slot="bottom">
+      <IonTabBar slot="bottom" id={TAB_BAR_ID}>
         <IonTabButton tab="search" href="/tabs/search">
           <SearchIcon {...ICON_PROPS} />
           <IonLabel>Buscar</IonLabel>
@@ -29,6 +32,7 @@ function UserRoutes() {
         <IonTabButton tab="budget" href="/tabs/budget">
           <ShoppingBasket {...ICON_PROPS} />
           <IonLabel>Presupuesto</IonLabel>
+          {count > 0 && <IonBadge>{count}</IonBadge>}
         </IonTabButton>
         <IonTabButton tab="profile" href="/tabs/profile">
           <UserIcon {...ICON_PROPS} />
