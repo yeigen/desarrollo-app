@@ -1,2 +1,75 @@
-/* For information on how to create your own theme, please refer to:
-http://ionicframework.com/docs/theming/ */
+:root {
+  --ion-font-family: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --ion-background-color: #f8fafd;
+  --ion-background-color-rgb: 248, 250, 253;
+  --ion-text-color: #111b28;
+  --ion-text-color-rgb: 17, 27, 40;
+  --ion-border-color: #dee4e9;
+
+  --ion-toolbar-background: #ffffff;
+  --ion-tab-bar-background: #ffffff;
+  --ion-tab-bar-border-color: #dee4e9;
+  --ion-tab-bar-color: #5f6a77;
+  --ion-tab-bar-color-selected: #218ce8;
+
+  --ion-color-primary: #218ce8;
+  --ion-color-primary-rgb: 33, 140, 232;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #1d7bcc;
+  --ion-color-primary-tint: #3798ea;
+
+  --ion-color-success: #54bf5c;
+  --ion-color-success-rgb: 84, 191, 92;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #4aa851;
+  --ion-color-success-tint: #65c56c;
+
+  --ion-color-danger: #e23439;
+  --ion-color-danger-rgb: 226, 52, 57;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #c72e32;
+  --ion-color-danger-tint: #e5484d;
+
+  --ion-color-medium: #5f6a77;
+  --ion-color-medium-rgb: 95, 106, 119;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #545d69;
+  --ion-color-medium-tint: #6f7985;
+
+  --app-card: #ffffff;
+  --app-secondary: #e2f0ff;
+  --app-secondary-foreground: #00559f;
+  --app-muted: #edf0f4;
+  --app-muted-foreground: #5f6a77;
+  --app-border: #dee4e9;
+  --app-input: #d8dfe6;
+  --app-backdrop: #d5d8db;
+  --app-camera: #0a0e11;
+  --app-warning-border: #ffb900;
+  --app-warning-icon: #fe9a00;
+  --app-radius: 16px;
+  --app-radius-lg: 20px;
+  --app-shadow-card: 0 1px 2px rgb(11 23 35 / 6%), 0 4px 14px rgb(11 23 35 / 7%);
+
+  --store-exito: #e6b816;
+  --store-carulla: #0b7643;
+  --store-olimpica: #d73337;
+  --store-jumbo: #2f9f3d;
+  --store-d1: #d01e1c;
+  --store-mercamio: #ec7c0e;
+}
+
+ion-button {
+  --border-radius: var(--app-radius);
+  --box-shadow: none;
+  min-height: 44px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+}

@@ -1,17 +1,16 @@
 {
-  "short_name": "Ionic App",
-  "name": "My Ionic App",
+  "short_name": "comprice",
+  "name": "comprice: compara precios del mercado en Cali",
   "icons": [
     {
-      "src": "assets/icon/favicon.png",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
-      "src": "assets/icon/icon.png",
-      "type": "image/png",
+      "src": "android-chrome-512x512.png",
       "sizes": "512x512",
-      "purpose": "maskable"
+      "type": "image/png"
     }
   ],
   "start_url": ".",
