@@ -39,6 +39,12 @@ Cada usuario se registra con su correo, desbloquea y completa tres misiones que 
 | --- | --- | --- |
 | ![Conteo de la misión de permanencia](docs/img/04-mision-quieto.png) | ![Pantalla de resultados](docs/img/05-resultados.png) | ![Top 5 en tiempo real](docs/img/06-ranking.png) |
 
+En el celular (Samsung Galaxy A15, Android 16), después de completar las tres misiones caminando:
+
+| Resultados | Ranking |
+| --- | --- |
+| ![Resultados en Android](docs/img/07-android-resultados.png) | ![Ranking en Android](docs/img/08-android-ranking.png) |
+
 ## Cómo se cumple cada requisito
 
 | Requisito | Cómo | Dónde |
@@ -102,7 +108,7 @@ cd android && ./gradlew assembleDebug
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-Para completar la misión 2 hay que caminar más de 30 m al aire libre, donde el GPS logra la precisión de 20 m.
+La app pide el permiso de notificaciones al entrar y el de ubicación al empezar la misión 2. Para completarla hay que caminar más de 30 m al aire libre, donde el GPS logra la precisión de 20 m.
 
 ## Configuración
 
@@ -127,6 +133,8 @@ npx vitest run
 ```
 
 Las pruebas unitarias cubren las reglas del juego: sumar puntos sin repetirlos, el formato guardado, el desbloqueo de la misión 3, la unión de la copia local con Firebase, la distancia por GPS, cuándo el acelerómetro indica movimiento y el top 5 con tu puesto. Además se comprobaron en el navegador los flujos completos (registro, las tres misiones, resultados y ranking) y las reglas de Firestore contra la API: leer sin sesión, escribir el progreso de otro, ponerse 999 puntos, agregar campos o borrar el progreso devuelven 403.
+
+En el Samsung Galaxy A15 se completaron las tres misiones de verdad: la foto quedó guardada en la carpeta privada de la app, la misión 2 se completó caminando, el celular vibró 1 s al terminar los 10 s quieto (registro de `dumpsys vibrator_manager`), llegaron las cuatro notificaciones y el progreso quedó igual en Firestore y en el `localStorage` del WebView.
 
 ## Estructura
 
