@@ -35,7 +35,6 @@ function Budget() {
       message: invited.length > 0
         ? 'Se eliminarán todos los productos. Las personas con acceso también lo verán vacío.'
         : 'Se eliminarán todos los productos.',
-      cssClass: styles.alert,
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
         { text: 'Vaciar', role: 'destructive', handler: clear },

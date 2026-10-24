@@ -96,3 +96,50 @@ ion-button[fill='outline'] {
   min-height: var(--app-input-height, 44px);
   font-size: 16px;
 }
+
+:root ion-alert {
+  --background: var(--app-card);
+}
+
+:root ion-alert .alert-wrapper {
+  border-radius: var(--app-radius-lg);
+}
+
+:root ion-alert .alert-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+:root ion-alert .alert-message {
+  font-size: 14px;
+  color: var(--app-muted-foreground);
+}
+
+:root ion-alert .alert-button {
+  border-radius: var(--app-radius);
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+:root ion-alert .alert-button-role-destructive {
+  background: var(--ion-color-danger);
+  color: var(--ion-color-danger-contrast);
+}
+
+ion-toggle {
+  --border-radius: 999px;
+  --track-background: var(--app-input);
+  --track-background-checked: var(--ion-color-success);
+  --handle-background: #ffffff;
+  --handle-background-checked: #ffffff;
+  --handle-box-shadow: var(--app-shadow-card);
+  --handle-width: 24px;
+  --handle-height: 24px;
+  --handle-spacing: 4px;
+}
+
+ion-toggle::part(track) {
+  width: 52px;
+  height: 32px;
+}

@@ -29,33 +29,3 @@
 .buttonIcon {
   margin-right: 8px;
 }
-
-:root .alert {
-  --background: var(--app-card);
-
-  :global(.alert-wrapper) {
-    border-radius: var(--app-radius-lg);
-  }
-
-  :global(.alert-title) {
-    font-size: 16px;
-    font-weight: 700;
-  }
-
-  :global(.alert-message) {
-    font-size: 14px;
-    color: var(--app-muted-foreground);
-  }
-
-  :global(.alert-button) {
-    border-radius: var(--app-radius);
-    font-weight: 600;
-    letter-spacing: normal;
-    text-transform: none;
-  }
-
-  :global(.alert-button-role-destructive) {
-    background: var(--ion-color-danger);
-    color: var(--ion-color-danger-contrast);
-  }
-}
