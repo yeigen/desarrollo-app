@@ -31,6 +31,10 @@ Cada usuario se registra con su correo, desbloquea y completa tres misiones que 
 
 ## Capturas
 
+### En el navegador
+
+Cuentas de prueba jugadas con Playwright, simulando la ubicación y el acelerómetro.
+
 | Iniciar sesión | Misiones | Caminando |
 | --- | --- | --- |
 | ![Iniciar sesión](docs/img/01-login.png) | ![Pantalla principal](docs/img/02-misiones.png) | ![Misión de movimiento en curso](docs/img/03-mision-caminar.png) |
@@ -39,11 +43,21 @@ Cada usuario se registra con su correo, desbloquea y completa tres misiones que 
 | --- | --- | --- |
 | ![Conteo de la misión de permanencia](docs/img/04-mision-quieto.png) | ![Pantalla de resultados](docs/img/05-resultados.png) | ![Top 5 en tiempo real](docs/img/06-ranking.png) |
 
-En el celular (Samsung Galaxy A15, Android 16), después de completar las tres misiones caminando:
+### En el celular
 
-| Resultados | Ranking |
-| --- | --- |
-| ![Resultados en Android](docs/img/07-android-resultados.png) | ![Ranking en Android](docs/img/08-android-ranking.png) |
+Prueba real en un Samsung Galaxy A15 con Android 16: registro, foto, caminata por la calle y 10 segundos quieto.
+
+| Registro | Foto guardada | Caminando (6 de 30 m) |
+| --- | --- | --- |
+| ![Registro en Android](docs/img/09-android-registro.png) | ![Misión de evidencia completada](docs/img/10-android-foto.png) | ![Misión de movimiento en curso](docs/img/11-android-caminando.png) |
+
+| Misiones completadas | Resultados | Ranking |
+| --- | --- | --- |
+| ![Las tres misiones completadas](docs/img/12-android-completas.png) | ![Resultados en Android](docs/img/07-android-resultados.png) | ![Ranking en Android](docs/img/08-android-ranking.png) |
+
+Video de la misión 2, caminando por la calle (12 s, clic para verlo):
+
+<a href="docs/video/mision-caminar.mp4?raw=true"><img src="docs/img/13-video-caminando.png" alt="Video caminando para la misión de movimiento" width="270"></a>
 
 ## Cómo se cumple cada requisito
 
