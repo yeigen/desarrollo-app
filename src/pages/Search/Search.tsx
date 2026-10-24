@@ -16,6 +16,7 @@ import { storeName } from '../../helpers/stores'
 import { useBudget } from '../../hooks/useBudget'
 import { useSearch } from '../../hooks/useSearch'
 import { useSettings } from '../../hooks/useSettings'
+import { useStores } from '../../hooks/useStores'
 import { EMPTY_FILTERS, type Offer } from '../../services/compriceApi'
 import styles from './Search.module.scss'
 
@@ -27,6 +28,7 @@ function Search() {
   const { query, filters, result, loading, failed, recent, search, applyFilters, retry } = useSearch()
   const { quantityOf, setQuantity } = useBudget()
   const { vibrate } = useSettings()
+  const { isEnabled } = useStores()
   const [presentToast] = useIonToast()
   const [text, setText] = useState('')
   const [filtersOpen, setFiltersOpen] = useState(false)
@@ -40,9 +42,10 @@ function Search() {
     filters.sort !== EMPTY_FILTERS.sort,
   ].filter(Boolean).length
 
-  const pricesPerUnit = result?.offers.flatMap((offer) => offer.price_per_unit ?? []) ?? []
+  const offers = result?.offers.filter((offer) => isEnabled(offer.store)) ?? []
+  const pricesPerUnit = offers.flatMap((offer) => offer.price_per_unit ?? [])
   const bestPricePerUnit = Math.min(...pricesPerUnit)
-  const missingStores = result?.stores_without_response.map(storeName) ?? []
+  const missingStores = result?.stores_without_response.filter(isEnabled).map(storeName) ?? []
 
   const submit = (event: FormEvent) => {
     event.preventDefault()
@@ -116,7 +119,7 @@ function Search() {
               title="Busca un producto"
               text="Escribe qué necesitas y compara su precio en las tiendas de Cali."
             />
-          ) : result.offers.length === 0 ? (
+          ) : offers.length === 0 ? (
             <EmptyState
               icon={<SearchIcon size={32} />}
               title="Sin resultados"
@@ -126,14 +129,14 @@ function Search() {
           ) : (
             <>
               <p className={styles.summary}>
-                <strong>{result.offers.length} ofertas</strong> para {query}
+                <strong>{offers.length} ofertas</strong> para {query}
               </p>
               {missingStores.length > 0 && (
                 <Warning>
                   {formatList(missingStores)} {missingStores.length === 1 ? 'no respondió' : 'no respondieron'}. Sus ofertas no aparecen.
                 </Warning>
               )}
-              {result.offers.map((offer) => (
+              {offers.map((offer) => (
                 <OfferCard
                   key={offerKey(offer)}
                   offer={offer}

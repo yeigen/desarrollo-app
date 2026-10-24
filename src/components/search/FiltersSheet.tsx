@@ -4,6 +4,7 @@ import SectionLabel from '../shared/SectionLabel'
 import Sheet from '../shared/Sheet'
 import StoreLogo from '../shared/StoreLogo'
 import { STORES } from '../../helpers/stores'
+import { useStores } from '../../hooks/useStores'
 import { EMPTY_FILTERS, type SearchFilters, type SortKey, type Unit } from '../../services/compriceApi'
 import styles from './FiltersSheet.module.scss'
 
@@ -21,6 +22,7 @@ interface FiltersSheetProps {
 }
 
 function FiltersSheet({ isOpen, filters, onApply, onClose }: FiltersSheetProps) {
+  const { isEnabled } = useStores()
   const [draft, setDraft] = useState(filters)
 
   const update = (changes: Partial<SearchFilters>) => setDraft({ ...draft, ...changes })
@@ -61,7 +63,7 @@ function FiltersSheet({ isOpen, filters, onApply, onClose }: FiltersSheetProps) 
     >
       <SectionLabel>Tiendas</SectionLabel>
       <div className={styles.chips}>
-        {STORES.map((store) => (
+        {STORES.filter((store) => isEnabled(store.id)).map((store) => (
           <IonChip
             key={store.id}
             className={draft.stores.includes(store.id) ? `${styles.chip} ${styles.active}` : styles.chip}
