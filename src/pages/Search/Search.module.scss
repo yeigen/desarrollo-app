@@ -91,23 +91,6 @@
   }
 }
 
-.warning {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border: 1px solid color-mix(in srgb, var(--app-warning-border) 40%, transparent);
-  border-radius: var(--app-radius);
-  background: color-mix(in srgb, var(--app-warning-border) 15%, transparent);
-  font-size: 12px;
-  font-weight: 500;
-
-  svg {
-    flex-shrink: 0;
-    color: var(--app-warning-icon);
-  }
-}
-
 .buttonIcon {
   margin-right: 6px;
 }

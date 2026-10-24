@@ -8,6 +8,7 @@ import OfferSkeleton from '../../components/search/OfferSkeleton'
 import EmptyState from '../../components/shared/EmptyState'
 import Header from '../../components/shared/Header'
 import Sheet from '../../components/shared/Sheet'
+import Warning from '../../components/shared/Warning'
 import { TAB_BAR_ID } from '../../config'
 import { formatList } from '../../helpers/format'
 import { offerKey } from '../../helpers/offers'
@@ -128,10 +129,9 @@ function Search() {
                 <strong>{result.offers.length} ofertas</strong> para {query}
               </p>
               {missingStores.length > 0 && (
-                <div className={styles.warning}>
-                  <TriangleAlert size={16} />
+                <Warning>
                   {formatList(missingStores)} {missingStores.length === 1 ? 'no respondió' : 'no respondieron'}. Sus ofertas no aparecen.
-                </div>
+                </Warning>
               )}
               {result.offers.map((offer) => (
                 <OfferCard
