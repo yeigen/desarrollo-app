@@ -14,6 +14,7 @@ export function usePushNotifications(userId: string) {
       PushNotifications.addListener('registration', ({ value }) => savePushToken(value)),
       PushNotifications.addListener('pushNotificationActionPerformed', ({ notification }) => {
         const ownerId = notification.data.ownerId
+        if (!ownerId) return
         navigate(ownerId === userId ? '/tabs/budget' : `/tabs/budget/${ownerId}`)
       }),
     ]
