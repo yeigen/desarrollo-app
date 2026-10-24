@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { readCache, writeCache } from '../services/cache'
 import { EMPTY_FILTERS, searchOffers, type SearchFilters, type SearchResult } from '../services/compriceApi'
+import { supabase } from '../services/supabase'
 
 const MAX_RECENT_SEARCHES = 5
 
@@ -41,6 +42,7 @@ export function useSearch() {
     const nextRecent = [nextQuery, ...recent.filter((item) => item !== nextQuery)].slice(0, MAX_RECENT_SEARCHES)
     setRecent(nextRecent)
     writeCache(RECENT_KEY, nextRecent)
+    supabase.from('searches').insert({}).then()
     run(nextQuery, filters)
   }
 
