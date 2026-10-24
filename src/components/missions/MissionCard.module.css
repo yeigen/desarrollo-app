@@ -1,0 +1,92 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--app-radius);
+  background: var(--app-card);
+  box-shadow: var(--app-shadow-card);
+}
+
+.header {
+  display: flex;
+  gap: 12px;
+}
+
+.icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--app-primary-soft);
+  color: var(--ion-color-primary);
+  font-size: 22px;
+}
+
+.done {
+  background: rgba(var(--ion-color-success-rgb), 0.12);
+  color: var(--ion-color-success);
+}
+
+.titles {
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.description {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: var(--app-muted-foreground);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.meta ion-badge {
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.points {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ion-color-primary);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.body:empty {
+  display: none;
+}
+
+.body p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--app-muted-foreground);
+}
+
+.body ion-button {
+  margin: 0;
+  min-height: 44px;
+}
+
+.error {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ion-color-danger);
+}

@@ -1,0 +1,39 @@
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 16px;
+  border-radius: var(--app-radius);
+  background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+}
+
+.total {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.points {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.bar {
+  --background: rgba(255, 255, 255, 0.25);
+  --progress-background: #ffffff;
+  height: 8px;
+  border-radius: 999px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.percent {
+  font-weight: 700;
+}
