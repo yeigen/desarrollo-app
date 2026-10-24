@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { IonButton, IonChip, IonInput, IonLabel, IonSegment, IonSegmentButton } from '@ionic/react'
 import SectionLabel from '../shared/SectionLabel'
 import Sheet from '../shared/Sheet'
-import StoreDot from '../shared/StoreDot'
+import StoreLogo from '../shared/StoreLogo'
 import { STORES } from '../../helpers/stores'
 import { EMPTY_FILTERS, type SearchFilters, type SortKey, type Unit } from '../../services/compriceApi'
 import styles from './FiltersSheet.module.scss'
@@ -67,7 +67,7 @@ function FiltersSheet({ isOpen, filters, onApply, onClose }: FiltersSheetProps) 
             className={draft.stores.includes(store.id) ? `${styles.chip} ${styles.active}` : styles.chip}
             onClick={() => toggleStore(store.id)}
           >
-            <StoreDot store={store.id} size={18} />
+            <StoreLogo store={store.id} size={18} />
             <IonLabel>{store.name}</IonLabel>
           </IonChip>
         ))}

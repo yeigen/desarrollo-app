@@ -2,7 +2,7 @@ import { IonButton } from '@ionic/react'
 import { Plus } from 'lucide-react'
 import ProductImage from '../shared/ProductImage'
 import Stepper from '../shared/Stepper'
-import StoreDot from '../shared/StoreDot'
+import StoreLogo from '../shared/StoreLogo'
 import { formatPrice } from '../../helpers/format'
 import { formatAmount, formatPricePerUnit, formatSeenAt } from '../../helpers/offers'
 import { storeName } from '../../helpers/stores'
@@ -35,7 +35,7 @@ function OfferCard({ offer, isBest, quantity, onAdd, onQuantityChange, onOpenIma
           </div>
           {details && <p className={styles.details}>{details}</p>}
           <p className={styles.store}>
-            <StoreDot store={offer.store} size={18} />
+            <StoreLogo store={offer.store} size={18} />
             {[storeName(offer.store), offer.branch].filter(Boolean).join(' · ')}
           </p>
         </div>

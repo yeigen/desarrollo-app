@@ -1,0 +1,12 @@
+.logo {
+  flex-shrink: 0;
+  width: auto;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+.column {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+}

@@ -1,6 +1,6 @@
 import { IonAccordion, IonItem, IonLabel } from '@ionic/react'
 import BudgetItemRow from './BudgetItemRow'
-import StoreDot from '../shared/StoreDot'
+import StoreLogo from '../shared/StoreLogo'
 import type { BudgetItem } from '../../context/BudgetContext'
 import { formatCount, formatPrice } from '../../helpers/format'
 import { offerKey } from '../../helpers/offers'
@@ -21,7 +21,7 @@ function StoreSection({ store, items, onQuantityChange }: StoreSectionProps) {
   return (
     <IonAccordion value={store} className={styles.section} style={{ borderLeftColor: `var(--store-${store})` }}>
       <IonItem slot="header" lines="none" className={styles.header}>
-        <StoreDot store={store} size={30} />
+        <StoreLogo store={store} size={30} column />
         <IonLabel className={styles.name}>
           <h3>{storeName(store)}</h3>
           <p>{formatCount(units, 'unidad', 'unidades')}</p>
