@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { IonButton, IonChip, IonInput, IonLabel, IonSegment, IonSegmentButton } from '@ionic/react'
+import SectionLabel from '../shared/SectionLabel'
 import Sheet from '../shared/Sheet'
 import StoreDot from '../shared/StoreDot'
 import { STORES } from '../../helpers/stores'
@@ -35,7 +36,6 @@ function FiltersSheet({ isOpen, filters, onApply, onClose }: FiltersSheetProps) 
   const rangeInput = (field: RangeField, placeholder: string) => (
     <IonInput
       aria-label={placeholder}
-      className={styles.input}
       fill="outline"
       type="number"
       inputmode="numeric"
@@ -59,7 +59,7 @@ function FiltersSheet({ isOpen, filters, onApply, onClose }: FiltersSheetProps) 
         </>
       }
     >
-      <p className={styles.label}>Tiendas</p>
+      <SectionLabel>Tiendas</SectionLabel>
       <div className={styles.chips}>
         {STORES.map((store) => (
           <IonChip
@@ -73,7 +73,7 @@ function FiltersSheet({ isOpen, filters, onApply, onClose }: FiltersSheetProps) 
         ))}
       </div>
 
-      <p className={styles.label}>Medida</p>
+      <SectionLabel>Medida</SectionLabel>
       <IonSegment className={styles.segment} value={draft.unit ?? ''}>
         {UNITS.map(([unit, label]) => (
           <IonSegmentButton key={unit} value={unit} onClick={() => update({ unit: draft.unit === unit ? null : unit })}>
@@ -82,21 +82,21 @@ function FiltersSheet({ isOpen, filters, onApply, onClose }: FiltersSheetProps) 
         ))}
       </IonSegment>
 
-      <p className={styles.label}>Precio</p>
+      <SectionLabel>Precio</SectionLabel>
       <div className={styles.range}>
         {rangeInput('minPrice', 'Mínimo')}
         <span>–</span>
         {rangeInput('maxPrice', 'Máximo')}
       </div>
 
-      <p className={styles.label}>Precio por unidad</p>
+      <SectionLabel>Precio por unidad</SectionLabel>
       <div className={styles.range}>
         {rangeInput('minPricePerUnit', 'Mínimo')}
         <span>–</span>
         {rangeInput('maxPricePerUnit', 'Máximo')}
       </div>
 
-      <p className={styles.label}>Ordenar por</p>
+      <SectionLabel>Ordenar por</SectionLabel>
       <IonSegment
         className={styles.segment}
         value={draft.sort}

@@ -17,7 +17,7 @@ function AuthField({ label, value, onChange, type = 'text', autocomplete, placeh
       <span className={styles.label}>{label}</span>
       <IonInput
         aria-label={label}
-        className={error ? `${styles.input} ion-invalid ion-touched` : styles.input}
+        className={error ? 'ion-invalid ion-touched' : undefined}
         fill="outline"
         type={type}
         autocomplete={autocomplete}

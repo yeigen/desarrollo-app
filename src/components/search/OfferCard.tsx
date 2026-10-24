@@ -1,5 +1,6 @@
 import { IonButton } from '@ionic/react'
-import { Plus, ShoppingBasket } from 'lucide-react'
+import { Plus } from 'lucide-react'
+import ProductImage from '../shared/ProductImage'
 import Stepper from '../shared/Stepper'
 import StoreDot from '../shared/StoreDot'
 import { formatPrice } from '../../helpers/format'
@@ -25,7 +26,7 @@ function OfferCard({ offer, isBest, quantity, onAdd, onQuantityChange, onOpenIma
     <article className={styles.card}>
       <div className={styles.top}>
         <button type="button" className={styles.thumbnail} aria-label="Ampliar imagen" disabled={!offer.image} onClick={onOpenImage}>
-          {offer.image ? <img src={offer.image} alt="" loading="lazy" /> : <ShoppingBasket size={28} />}
+          <ProductImage image={offer.image} size={64} />
         </button>
         <div className={styles.info}>
           <div className={styles.titleRow}>

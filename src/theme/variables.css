@@ -85,3 +85,14 @@ ion-button[fill='outline'] {
   --border-width: 1px;
   --color: var(--ion-text-color);
 }
+
+:root ion-input.input-fill-outline {
+  --background: var(--app-card);
+  --border-color: var(--app-input);
+  --border-radius: var(--app-radius);
+  --highlight-color-focused: var(--ion-color-primary);
+  --padding-start: 12px;
+  --padding-end: 4px;
+  min-height: var(--app-input-height, 44px);
+  font-size: 16px;
+}
