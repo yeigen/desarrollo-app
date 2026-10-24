@@ -5,6 +5,7 @@ import { countUnits, totalPrice } from '../helpers/budget'
 import { offerKey } from '../helpers/offers'
 import { readCache, writeCache } from '../services/cache'
 import type { Offer } from '../services/compriceApi'
+import { notifyBudget } from '../services/push'
 import { supabase, uniqueChannel } from '../services/supabase'
 
 interface ItemRow {
@@ -112,10 +113,13 @@ export function useSupabaseBudget(ownerId: string): BudgetContextValue {
     if (!loading) writeCache(`budget:${ownerId}`, { items, people })
   }, [ownerId, items, people, loading])
 
-  const write = (request: () => PromiseLike<{ error: unknown }>) => {
+  const write = (request: () => PromiseLike<{ error: unknown }>, onSaved?: () => void) => {
     writes.current = writes.current.then(async () => {
       const { error } = await request()
-      if (!error) return
+      if (!error) {
+        onSaved?.()
+        return
+      }
       const data = await fetchItems(ownerId)
       if (data) setItems(data)
     })
@@ -126,8 +130,12 @@ export function useSupabaseBudget(ownerId: string): BudgetContextValue {
   const setQuantity = (offer: Offer, quantity: number) => {
     const key = offerKey(offer)
     if (quantity > 0) {
+      const isNew = quantityOf(offer) === 0
       setItems((current) => withItem(current, { offer, quantity }))
-      write(() => supabase.from('budget_items').upsert({ owner_id: ownerId, offer_key: key, offer, quantity }))
+      write(
+        () => supabase.from('budget_items').upsert({ owner_id: ownerId, offer_key: key, offer, quantity }),
+        isNew ? () => notifyBudget({ type: 'item', ownerId, offerKey: key }) : undefined,
+      )
     } else {
       setItems((current) => withoutItem(current, key))
       write(() => supabase.from('budget_items').delete().match({ owner_id: ownerId, offer_key: key }))
@@ -140,8 +148,11 @@ export function useSupabaseBudget(ownerId: string): BudgetContextValue {
   }
 
   const invite = async (email: string) => {
-    const { error } = await supabase.rpc('invite_to_budget', { email })
-    if (!error) return ''
+    const { data, error } = await supabase.rpc('invite_to_budget', { email })
+    if (!error) {
+      notifyBudget({ type: 'invite', memberId: data })
+      return ''
+    }
     return INVITE_ERRORS[error.code] ?? 'No pudimos compartir el presupuesto. Intenta de nuevo.'
   }
 
