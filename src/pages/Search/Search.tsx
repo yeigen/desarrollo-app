@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { IonButton, IonChip, IonContent, IonLabel, IonPage, IonSearchbar, useIonToast } from '@ionic/react'
+import { Haptics, ImpactStyle } from '@capacitor/haptics'
 import { Clock, RefreshCw, Search as SearchIcon, SlidersHorizontal, TriangleAlert } from 'lucide-react'
 import FiltersSheet from '../../components/search/FiltersSheet'
 import OfferCard from '../../components/search/OfferCard'
@@ -13,6 +14,7 @@ import { offerKey } from '../../helpers/offers'
 import { storeName } from '../../helpers/stores'
 import { useBudget } from '../../hooks/useBudget'
 import { useSearch } from '../../hooks/useSearch'
+import { useSettings } from '../../hooks/useSettings'
 import { EMPTY_FILTERS, type Offer } from '../../services/compriceApi'
 import styles from './Search.module.scss'
 
@@ -23,6 +25,7 @@ const SKELETON_COUNT = 4
 function Search() {
   const { query, filters, result, loading, failed, recent, search, applyFilters, retry } = useSearch()
   const { quantityOf, setQuantity } = useBudget()
+  const { vibrate } = useSettings()
   const [presentToast] = useIonToast()
   const [text, setText] = useState('')
   const [filtersOpen, setFiltersOpen] = useState(false)
@@ -52,6 +55,7 @@ function Search() {
 
   const add = (offer: Offer) => {
     setQuantity(offer, quantityOf(offer) + 1)
+    if (vibrate) Haptics.impact({ style: ImpactStyle.Light })
     presentToast({
       message: 'Agregado al presupuesto',
       duration: TOAST_DURATION,

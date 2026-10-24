@@ -1,6 +1,7 @@
 import { IonApp, setupIonicReact } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 import AuthProvider from './context/AuthProvider'
+import SettingsProvider from './context/SettingsProvider'
 import AppRoutes from './routes/AppRoutes'
 import '@ionic/react/css/core.css'
 import '@ionic/react/css/normalize.css'
@@ -13,11 +14,13 @@ setupIonicReact({ mode: 'md' })
 function App() {
   return (
     <IonApp>
-      <AuthProvider>
-        <IonReactRouter>
-          <AppRoutes />
-        </IonReactRouter>
-      </AuthProvider>
+      <SettingsProvider>
+        <AuthProvider>
+          <IonReactRouter>
+            <AppRoutes />
+          </IonReactRouter>
+        </AuthProvider>
+      </SettingsProvider>
     </IonApp>
   )
 }
