@@ -1,6 +1,6 @@
 # Documento de alcance: Comprice móvil
 
-Proyecto final de Desarrollo de Aplicaciones Móviles (UAO), elaborado por Gabriel Martínez. Corresponde a la rama `proyecto-comprice` del repositorio `desarrollo-app` y describe el estado del 24 de octubre de 2026.
+Proyecto final de Desarrollo de Aplicaciones Móviles (UAO), elaborado por Gabriel Martínez. Corresponde a la rama `proyecto-comprice` del repositorio `desarrollo-app` y describe el estado del 24 de octubre de 2026, más la función Tiendas cercanas agregada el 20 de noviembre de 2026 en la rama `proyecto-final-mapa`.
 
 ## 1. Problema y objetivo
 
@@ -22,6 +22,7 @@ Comparar el precio del mercado en Cali obliga a revisar la página de cada super
 | Sin conexión | La app abre con la última copia del presupuesto, el perfil y los compartidos, y bloquea la edición hasta que vuelva la red | Toda la app |
 | Vibración | Vibra al agregar un producto; se puede apagar y la preferencia queda en el celular | Buscar, Perfil |
 | Notificaciones push | Avisan cuando alguien comparte su presupuesto contigo o agrega un producto a un presupuesto compartido; al tocarlas se abre ese presupuesto | Android |
+| Tiendas cercanas | Mapa con tu ubicación y las sedes en Cali de las tiendas activas, y lista ordenada por distancia; al tocar una sede se abre la ruta en Google Maps. Si no hay permiso de ubicación, mide desde el centro de Cali | Tiendas |
 | Administración | Métricas reales (usuarios, búsquedas del día, presupuestos compartidos) y activar o desactivar tiendas para todos en vivo | Admin |
 
 ### Fuera de alcance
@@ -58,6 +59,7 @@ flowchart TB
     Fn["Edge Function<br/>send-push"]
   end
   FCM["Firebase Cloud Messaging"]
+  OSM["Teselas de OpenStreetMap"]
 
   App -- "GET /search" --> API
   API --> Tiendas
@@ -69,6 +71,7 @@ flowchart TB
   Fn -- "tokens" --> DB
   Fn -- "HTTP v1" --> FCM
   FCM -- "notificación" --> App
+  App -- "mapa" --> OSM
 ```
 
 - La búsqueda de precios usa el backend de Comprice ya desplegado, que consulta las tiendas en vivo y guarda un caché diario. En el celular la llamada pasa por `CapacitorHttp` porque esa API no envía CORS; en desarrollo pasa por el proxy de Vite.
@@ -91,6 +94,9 @@ flowchart TB
 | Nativo | @capacitor/preferences | 8.0.1 | Preferencias y copia local |
 | Nativo | @capacitor/network | 8.0.1 | Saber si hay conexión |
 | Nativo | @capacitor/push-notifications | 8.1.3 | Recibir notificaciones de FCM |
+| Nativo | @capacitor/geolocation | 8.2.5 | Ubicación del usuario para las tiendas cercanas |
+| Interfaz | Leaflet | 1.9.4 | Mapa interactivo con teselas de OpenStreetMap |
+| Interfaz | react-leaflet | 5.0.0 | Componentes de React para Leaflet (pide React 19) |
 | Backend como servicio | Supabase (Auth, Postgres 17, Realtime, Edge Functions) | supabase-js 2.118.0 | Cuentas, datos, tiempo real y notificaciones |
 | Backend como servicio | Firebase Cloud Messaging | HTTP v1 | Entrega de las notificaciones push |
 | Backend propio | API de Comprice (FastAPI) | | Búsqueda de precios en las tiendas |
@@ -108,6 +114,7 @@ Las migraciones están en [`supabase/migrations`](../supabase/migrations) y la E
 | `budget_items` | Productos del presupuesto de cada dueño: oferta, cantidad (1 a 999) | El dueño y las personas invitadas leen y editan |
 | `budget_members` | Quién tiene acceso al presupuesto de quién | Lo leen las personas de ese presupuesto; solo se crea con `invite_to_budget` |
 | `stores` | Las seis tiendas y si están activas | Todos leen; solo el administrador actualiza |
+| `store_locations` | Sedes de las seis cadenas en Cali: nombre, dirección si existe y coordenadas, tomadas de OpenStreetMap con la API Overpass | Todos leen; solo el administrador agrega, edita o borra |
 | `searches` | Quién buscó y cuándo, sin el texto buscado | Cada usuario registra las suyas; nadie las lee, solo se cuentan en `admin_stats` |
 | `push_tokens` | Token de notificaciones de cada celular | Cada usuario ve y borra los suyos; se guardan con `save_push_token` |
 
@@ -118,7 +125,7 @@ Funciones de la base: `invite_to_budget(email)` comparte el presupuesto con una 
 | Tema | Dónde se usa |
 | --- | --- |
 | React | Toda la interfaz: componentes, contextos (`AuthProvider`, `BudgetProvider`, `StoresProvider`, `SettingsProvider`) y hooks propios |
-| Sensores | Vibración con Haptics al agregar un producto; conexión de red con Network |
+| Sensores | Vibración con Haptics al agregar un producto; conexión de red con Network; GPS con Geolocation para las tiendas cercanas |
 | Memoria | Preferences: preferencia de vibrar, búsquedas recientes y copia local para abrir sin conexión |
 | Bases de datos | Postgres en Supabase con reglas de acceso por fila y migraciones versionadas |
 | Firebase | Firebase Cloud Messaging para las notificaciones push |
@@ -130,10 +137,10 @@ Funciones de la base: `invite_to_budget(email)` comparte el presupuesto con una 
 
 | Carpeta | Contenido |
 | --- | --- |
-| `src/helpers` | Funciones puras: formato de precios, ofertas, totales del presupuesto, tiendas y validaciones |
+| `src/helpers` | Funciones puras: formato de precios y distancias, ofertas, totales del presupuesto, tiendas, sedes cercanas y validaciones |
 | `src/context` | Contextos y proveedores de sesión, presupuesto, tiendas y preferencias |
 | `src/pages` | Una carpeta por pantalla con su `.tsx` y su `.module.scss` |
-| `src/components` | `shared` (encabezado, hoja, paso a paso, logos), `search` (`OfferCard`, filtros), `budget` (secciones por tienda, compartir) y `auth` |
+| `src/components` | `shared` (encabezado, hoja, paso a paso, logos), `search` (`OfferCard`, filtros), `budget` (secciones por tienda, compartir), `map` (mapa y lista de sedes) y `auth` |
 | `src/hooks` | Hooks con estado: sesión, presupuesto en Supabase, compartidos, tiendas, métricas, búsqueda, red y push |
 | `src/routes` | `AppRoutes` (público o privado), `UserRoutes` (pestañas) y `AdminRoutes` (solo administrador) |
 | `src/services` | Clientes de la API de Comprice y de Supabase, copia local y push |
@@ -145,6 +152,7 @@ Funciones de la base: `invite_to_budget(email)` comparte el presupuesto con una 
 - Reglas de acceso probadas contra la API: un usuario no puede escribir en un presupuesto ajeno, darse acceso, superar 999 unidades, volverse administrador, cambiar tiendas, ver métricas ni leer búsquedas; sin sesión no se lee nada.
 - Sin conexión: arranque en frío en modo avión con la última copia y la edición bloqueada.
 - Notificaciones: llegan con la app en segundo plano, abren el presupuesto al tocarlas y dejan de llegar al cerrar sesión.
+- Tiendas cercanas, en el navegador con la ubicación emulada en Cali: las 49 sedes en el mapa y en la lista por distancia, el enlace a Google Maps, una tienda desactivada (simulando la respuesta de `stores` en el navegador) que desaparece del mapa y de la lista, y el aviso cuando no hay permiso de ubicación. El APK con el permiso de ubicación compila con Gradle; falta probarlo en el celular.
 - Cada commit se verificó con `tsc` y ESLint; la compilación de Android con Gradle.
 
 ## 10. Limitaciones conocidas
@@ -154,3 +162,4 @@ Funciones de la base: `invite_to_budget(email)` comparte el presupuesto con una 
 - Las notificaciones salen cuando el cambio se hace desde la app; no se envían por cambios de cantidad para no saturar.
 - Con la app abierta las notificaciones no aparecen en la bandeja; los cambios se ven por tiempo real.
 - El rol de administrador solo se asigna desde Supabase.
+- Las sedes son las que existen en OpenStreetMap al 20 de noviembre de 2026 (49 en Cali); puede faltar alguna y muchas no tienen dirección registrada. Las teselas de OpenStreetMap son un servicio gratuito con política de uso justo; para mucho tráfico habría que cambiar `VITE_MAP_TILES_URL` a otro proveedor.
