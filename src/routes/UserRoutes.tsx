@@ -1,9 +1,10 @@
 import { Navigate, Route } from 'react-router-dom'
 import { IonBadge, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react'
-import { Search as SearchIcon, Shield, ShoppingBasket, User as UserIcon } from 'lucide-react'
+import { MapPin, Search as SearchIcon, Shield, ShoppingBasket, User as UserIcon } from 'lucide-react'
 import AdminRoutes from './AdminRoutes'
 import { TAB_BAR_ID } from '../config'
 import Budget from '../pages/Budget/Budget'
+import Map from '../pages/Map/Map'
 import Profile from '../pages/Profile/Profile'
 import Search from '../pages/Search/Search'
 import SharedBudget from '../pages/SharedBudget/SharedBudget'
@@ -24,6 +25,7 @@ function UserRoutes() {
         <Route path="search" element={<Search />} />
         <Route path="budget" element={<Budget />} />
         <Route path="budget/:ownerId" element={<SharedBudget />} />
+        <Route path="map" element={<Map />} />
         <Route path="profile" element={<Profile />} />
         <Route path="admin/*" element={<AdminRoutes />} />
         <Route index element={<Navigate to="search" replace />} />
@@ -37,6 +39,10 @@ function UserRoutes() {
           <ShoppingBasket {...ICON_PROPS} />
           <IonLabel>Presupuesto</IonLabel>
           {count > 0 && <IonBadge>{count}</IonBadge>}
+        </IonTabButton>
+        <IonTabButton tab="map" href="/tabs/map">
+          <MapPin {...ICON_PROPS} />
+          <IonLabel>Tiendas</IonLabel>
         </IonTabButton>
         <IonTabButton tab="profile" href="/tabs/profile">
           <UserIcon {...ICON_PROPS} />
