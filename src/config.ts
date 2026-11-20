@@ -4,4 +4,6 @@ export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 
 export const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
 
+export const MAP_TILES_URL = import.meta.env.VITE_MAP_TILES_URL
+
 export const TAB_BAR_ID = 'tab-bar'
