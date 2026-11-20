@@ -141,4 +141,5 @@ Proyecto académico, sin licencia definida.
 
 ## Integrantes
 
-- Gabriel Martínez
+- Gabriel Martínez ([@yeigen](https://github.com/yeigen)): rama `proyecto-final-mapa`, tiendas cercanas
+- Samuel Patiño ([@Lucu1232004](https://github.com/Lucu1232004)): rama `proyecto-final-chat`, chat del presupuesto compartido
