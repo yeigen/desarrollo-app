@@ -4,6 +4,7 @@ const config: CapacitorConfig = {
   appId: 'com.yeigen.comprice',
   appName: 'Comprice',
   webDir: 'dist',
+  appendUserAgent: 'Comprice/0.0.1',
   plugins: {
     CapacitorHttp: {
       enabled: true
