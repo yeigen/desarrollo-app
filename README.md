@@ -18,7 +18,7 @@ Proyecto final: Comprice móvil, compara precios del mercado en Cali y comparte 
 
 ## Descripción
 
-Comprice móvil busca un producto en seis supermercados de Cali (Éxito, Carulla, Olímpica, Jumbo, D1 y Mercamío), ordena las ofertas por precio por kilo, litro o unidad y deja armar un presupuesto por tienda que se comparte en tiempo real con otras cuentas. Es una app de Ionic React con Capacitor para Android, con Supabase como backend (login, base de datos con reglas de acceso, tiempo real y notificaciones) y la API propia de Comprice para los precios.
+Comprice móvil busca un producto en seis supermercados de Cali (Éxito, Carulla, Olímpica, Jumbo, D1 y Mercamío), ordena las ofertas por precio por kilo, litro o unidad, deja armar un presupuesto por tienda que se comparte en tiempo real con otras cuentas y muestra en un mapa las sedes más cercanas de las tiendas activas. Es una app de Ionic React con Capacitor para Android, con Supabase como backend (login, base de datos con reglas de acceso, tiempo real y notificaciones) y la API propia de Comprice para los precios.
 
 - Prototipo en Lovable: https://price-pick-budget-book.lovable.app (el prompt usado está en [`prototipo/prompt-lovable.md`](prototipo/prompt-lovable.md))
 - Documento de alcance y tecnologías: [`docs/alcance.md`](docs/alcance.md)
@@ -34,9 +34,9 @@ Comprice móvil busca un producto en seis supermercados de Cali (Éxito, Carulla
 | --- | --- | --- | --- |
 | ![Presupuesto por tienda](docs/img/presupuesto.png) | ![Hoja para compartir](docs/img/compartir.png) | ![Perfil con compartidos](docs/img/perfil.png) | ![Presupuesto compartido](docs/img/presupuesto-compartido.png) |
 
-| Admin | Sin conexión (Galaxy A15) |
-| --- | --- |
-| ![Métricas y tiendas](docs/img/admin.png) | ![Última copia guardada](docs/img/sin-conexion.png) |
+| Admin | Sin conexión (Galaxy A15) | Tiendas cercanas | Cómo llegar |
+| --- | --- | --- | --- |
+| ![Métricas y tiendas](docs/img/admin.png) | ![Última copia guardada](docs/img/sin-conexion.png) | ![Mapa y sedes por distancia](docs/img/tiendas.png) | ![Sede en el mapa con el enlace a Google Maps](docs/img/tiendas-como-llegar.png) |
 
 Notificaciones push en el celular:
 
@@ -50,11 +50,16 @@ Notificaciones push en el celular:
 | --- | --- | --- |
 | API de Comprice (FastAPI propia) | `GET https://64.227.5.48.sslip.io/search` con `q`, `sort`, `stores`, `unit`, `min_price`, `max_price`, `min_price_per_unit` y `max_price_per_unit` | Buscar ofertas en las seis tiendas |
 | Supabase Auth | `signUp`, `signInWithPassword`, `signOut` y `onAuthStateChange` | Registro, inicio de sesión y sesión persistente |
-| Supabase Data API | Tablas `profiles`, `budget_items`, `budget_members`, `stores`, `searches` y `push_tokens` | Perfiles, presupuestos, tiendas, métricas y tokens |
+| Supabase Data API | Tablas `profiles`, `budget_items`, `budget_members`, `stores`, `store_locations`, `searches` y `push_tokens` | Perfiles, presupuestos, tiendas, sedes, métricas y tokens |
 | Supabase RPC | `invite_to_budget`, `save_push_token` y `admin_stats` | Compartir por correo, registrar el celular y métricas de admin |
 | Supabase Realtime | `postgres_changes` de `budget_items`, `budget_members` y `stores` | Presupuesto compartido y tiendas en vivo |
 | Supabase Edge Functions | `POST /functions/v1/send-push` | Avisar invitaciones y productos nuevos |
 | Firebase Cloud Messaging | HTTP v1 `messages:send` (desde la Edge Function) | Entregar las notificaciones push |
+| Teselas de OpenStreetMap | `GET https://tile.openstreetmap.org/{z}/{x}/{y}.png` | Dibujar el mapa de Tiendas cercanas |
+| Overpass API (OpenStreetMap) | `POST https://overpass-api.de/api/interpreter`, consultada una vez al crear la migración | Obtener las sedes reales de las seis cadenas en Cali, que quedaron en `store_locations` |
+| Google Maps (enlace) | `https://www.google.com/maps/dir/?api=1&destination=<lat>,<lng>` | Abrir la ruta hacia la sede elegida |
+
+Los datos del mapa y de las sedes son © OpenStreetMap contributors, con licencia ODbL (https://www.openstreetmap.org/copyright); la atribución se ve en la esquina del mapa.
 
 ## Requisitos
 
@@ -85,7 +90,7 @@ En el navegador:
 npm run dev
 ```
 
-Abre http://localhost:5173, crea una cuenta y busca un producto. Las vibraciones y las notificaciones push solo funcionan en el celular.
+Abre http://localhost:5173, crea una cuenta y busca un producto. En la pestaña Tiendas el navegador pide la ubicación; si se niega, las distancias se miden desde el centro de Cali. Las vibraciones y las notificaciones push solo funcionan en el celular.
 
 En el celular:
 
@@ -105,6 +110,7 @@ Para ver el tiempo real, entra con una cuenta en el navegador y con otra en el c
 | Variable | Archivo | Contenido |
 | --- | --- | --- |
 | `VITE_COMPRICE_API_URL` | `.env` | URL de la API de Comprice (no es secreta, se versiona) |
+| `VITE_MAP_TILES_URL` | `.env` | Plantilla de las teselas del mapa; por defecto las de OpenStreetMap (no es secreta, se versiona) |
 | `VITE_SUPABASE_URL` | `.env.local` | URL del proyecto de Supabase |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | `.env.local` | Clave publishable del proyecto |
 | `FCM_SERVICE_ACCOUNT` | Secreto de la Edge Function | JSON de la cuenta de servicio de Firebase para FCM HTTP v1 |
