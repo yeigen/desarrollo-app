@@ -4,6 +4,12 @@ const NUMBER_FORMAT = new Intl.NumberFormat('es-CO')
 
 const LIST_FORMAT = new Intl.ListFormat('es', { type: 'conjunction' })
 
+const METERS_FORMAT = new Intl.NumberFormat('es-CO', { style: 'unit', unit: 'meter', maximumFractionDigits: 0 })
+
+const KILOMETERS_FORMAT = new Intl.NumberFormat('es-CO', { style: 'unit', unit: 'kilometer', maximumFractionDigits: 1 })
+
+const METERS_PER_KILOMETER = 1000
+
 export function formatPrice(value: number) {
   return PRICE_FORMAT.format(value)
 }
@@ -18,6 +24,12 @@ export function formatList(items: string[]) {
 
 export function formatCount(count: number, singular: string, plural: string) {
   return `${formatNumber(count)} ${count === 1 ? singular : plural}`
+}
+
+export function formatDistance(meters: number) {
+  return meters < METERS_PER_KILOMETER
+    ? METERS_FORMAT.format(meters)
+    : KILOMETERS_FORMAT.format(meters / METERS_PER_KILOMETER)
 }
 
 export function initials(name: string) {
