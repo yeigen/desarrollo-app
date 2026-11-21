@@ -6,6 +6,8 @@ const SHAKING_THRESHOLD = 10
 
 export type MotionState = 'rest' | 'moving' | 'shaking'
 
+export const hasReading = ({ x, y, z }: Acceleration) => [x, y, z].every(Number.isFinite)
+
 export function measureMotion({ x, y, z }: Acceleration) {
   const magnitude = Math.abs(Math.hypot(x, y, z) - EARTH_GRAVITY)
   let state: MotionState = 'rest'

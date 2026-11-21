@@ -1,4 +1,5 @@
-import { measureMotion } from './measureMotion'
+import type { Acceleration } from '@capacitor/motion'
+import { hasReading, measureMotion } from './measureMotion'
 
 test('el celular quieto solo mide la gravedad y queda en reposo', () => {
   const motion = measureMotion({ x: 0.1, y: 0, z: 9.7 })
@@ -14,4 +15,9 @@ test('la gravedad cuenta igual en cualquier orientación del celular', () => {
 test('una aceleración moderada cuenta como movimiento y una fuerte como sacudida', () => {
   expect(measureMotion({ x: 0, y: 3, z: 12 }).state).toBe('moving')
   expect(measureMotion({ x: 18, y: -12, z: 9.81 }).state).toBe('shaking')
+})
+
+test('un equipo sin acelerómetro entrega ejes nulos y eso no es una lectura', () => {
+  expect(hasReading({ x: null, y: null, z: null } as unknown as Acceleration)).toBe(false)
+  expect(hasReading({ x: 0.1, y: 0, z: 9.7 })).toBe(true)
 })
