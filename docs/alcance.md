@@ -1,6 +1,6 @@
 # Documento de alcance: Comprice móvil
 
-Proyecto final de Desarrollo de Aplicaciones Móviles (UAO), elaborado por Gabriel Martínez. Corresponde a la rama `proyecto-comprice` del repositorio `desarrollo-app` y describe el estado del 24 de octubre de 2026, más la función Tiendas cercanas agregada el 20 de noviembre de 2026 en la rama `proyecto-final-mapa`.
+Proyecto final de Desarrollo de Aplicaciones Móviles (UAO), elaborado por Gabriel Martínez y Samuel Patiño. Corresponde a las ramas `proyecto-final-mapa` (tiendas cercanas) y `proyecto-final-chat` (chat del presupuesto compartido), sobre la base de `proyecto-comprice`, y describe el estado del 24 de octubre de 2026 más los cambios del 20 de noviembre de 2026.
 
 ## 1. Problema y objetivo
 
@@ -18,6 +18,7 @@ Comparar el precio del mercado en Cali obliga a revisar la página de cada super
 | Búsquedas recientes | Las últimas cinco búsquedas quedan guardadas en el celular | Buscar |
 | Presupuesto | Productos agrupados por tienda con subtotal, cantidades de 1 a 999 y total estimado | Presupuesto |
 | Compartir en tiempo real | Se invita por correo a otra cuenta, que puede editar; los cambios de cualquiera se ven en vivo en todos los celulares | Presupuesto > Compartir |
+| Chat del presupuesto | Mensajes de texto entre el dueño y las personas invitadas, guardados y actualizados en vivo; muestra los últimos 100 y guarda 50 en el celular para leer sin conexión | Presupuesto > Chat |
 | Compartidos conmigo | Lista de los presupuestos de otras personas, con su total, que se abren desde el perfil | Perfil |
 | Sin conexión | La app abre con la última copia del presupuesto, el perfil y los compartidos, y bloquea la edición hasta que vuelva la red | Toda la app |
 | Vibración | Vibra al agregar un producto; se puede apagar y la preferencia queda en el celular | Buscar, Perfil |
@@ -35,13 +36,14 @@ Comparar el precio del mercado en Cali obliga a revisar la página de cada super
 | Editar sin conexión | Se eligió solo lectura para no tener que resolver conflictos entre cambios |
 | Confirmación de correo y recuperación de contraseña | El correo por defecto de Supabase solo envía al equipo del proyecto y dos mensajes por hora |
 | Nombrar varios presupuestos | Cada cuenta tiene un presupuesto |
+| Adjuntos, edición, borrado y push del chat | Se dejó solo texto y tiempo real para no ampliar el alcance |
 | iOS | La app se construye con Capacitor y no tiene nada exclusivo de Android salvo push, pero solo se probó en Android |
 
 ## 3. Usuarios y roles
 
 | Rol | Puede | Cómo se asigna |
 | --- | --- | --- |
-| Usuario | Buscar, armar y compartir su presupuesto, editar los presupuestos que le compartieron | Al registrarse |
+| Usuario | Buscar, armar y compartir su presupuesto, editar los presupuestos que le compartieron y chatear con las personas que tienen acceso | Al registrarse |
 | Administrador | Lo mismo que un usuario, más la pestaña Admin: métricas y activar o desactivar tiendas | Solo por SQL en Supabase; nadie puede darse el rol desde la app ni desde la API |
 
 ## 4. Arquitectura
@@ -75,7 +77,7 @@ flowchart TB
 ```
 
 - La búsqueda de precios usa el backend de Comprice ya desplegado, que consulta las tiendas en vivo y guarda un caché diario. En el celular la llamada pasa por `CapacitorHttp` porque esa API no envía CORS; en desarrollo pasa por el proxy de Vite.
-- Supabase es el backend como servicio: Auth para las cuentas, Postgres para los datos con reglas de acceso (RLS) en cada tabla, Realtime para el presupuesto compartido y las tiendas, y una Edge Function para las notificaciones.
+- Supabase es el backend como servicio: Auth para las cuentas, Postgres para los datos con reglas de acceso (RLS) en cada tabla, Realtime para el presupuesto compartido, el chat y las tiendas, y una Edge Function para las notificaciones.
 - La Edge Function `send-push` recibe el aviso de la app con la sesión del usuario, comprueba con sus permisos que el cambio existe, busca los tokens de los destinatarios y envía por FCM HTTP v1 con una cuenta de servicio de Firebase guardada como secreto.
 
 ## 5. Tecnologías utilizadas
@@ -113,12 +115,13 @@ Las migraciones están en [`supabase/migrations`](../supabase/migrations) y la E
 | `profiles` | Nombre, correo y rol de cada cuenta; la crea un trigger al registrarse | Cada usuario lee su perfil y el de las personas con las que comparte presupuesto; nadie lo modifica desde la API |
 | `budget_items` | Productos del presupuesto de cada dueño: oferta, cantidad (1 a 999) | El dueño y las personas invitadas leen y editan |
 | `budget_members` | Quién tiene acceso al presupuesto de quién | Lo leen las personas de ese presupuesto; solo se crea con `invite_to_budget` |
+| `budget_messages` | Mensajes de texto del presupuesto: quién escribe, el texto y la fecha | El dueño y las personas invitadas leen y escriben; nadie edita ni borra |
 | `stores` | Las seis tiendas y si están activas | Todos leen; solo el administrador actualiza |
 | `store_locations` | Sedes de las seis cadenas en Cali: nombre, dirección si existe y coordenadas, tomadas de OpenStreetMap con la API Overpass | Todos leen; solo el administrador agrega, edita o borra |
 | `searches` | Quién buscó y cuándo, sin el texto buscado | Cada usuario registra las suyas; nadie las lee, solo se cuentan en `admin_stats` |
 | `push_tokens` | Token de notificaciones de cada celular | Cada usuario ve y borra los suyos; se guardan con `save_push_token` |
 
-Funciones de la base: `invite_to_budget(email)` comparte el presupuesto con una cuenta existente, `save_push_token(token)` registra el celular y `admin_stats()` devuelve las métricas solo a un administrador. `budget_items`, `budget_members` y `stores` están en Realtime.
+Funciones de la base: `invite_to_budget(email)` comparte el presupuesto con una cuenta existente, `save_push_token(token)` registra el celular y `admin_stats()` devuelve las métricas solo a un administrador. `budget_items`, `budget_members`, `budget_messages` y `stores` están en Realtime.
 
 ## 7. Temas del curso
 
@@ -126,10 +129,10 @@ Funciones de la base: `invite_to_budget(email)` comparte el presupuesto con una 
 | --- | --- |
 | React | Toda la interfaz: componentes, contextos (`AuthProvider`, `BudgetProvider`, `StoresProvider`, `SettingsProvider`) y hooks propios |
 | Sensores | Vibración con Haptics al agregar un producto; conexión de red con Network; GPS con Geolocation para las tiendas cercanas |
-| Memoria | Preferences: preferencia de vibrar, búsquedas recientes y copia local para abrir sin conexión |
+| Memoria | Preferences: preferencia de vibrar, búsquedas recientes, copia local para abrir sin conexión y últimos mensajes del chat |
 | Bases de datos | Postgres en Supabase con reglas de acceso por fila y migraciones versionadas |
 | Firebase | Firebase Cloud Messaging para las notificaciones push |
-| Comunicación en tiempo real | Supabase Realtime: presupuesto compartido en vivo, personas con acceso y tiendas activas |
+| Comunicación en tiempo real | Supabase Realtime: presupuesto compartido en vivo, personas con acceso, tiendas activas y chat del presupuesto |
 | Login y registro reales | Supabase Auth con roles guardados en `profiles` |
 | Backend | API de Comprice propia (FastAPI) y Edge Function en Supabase |
 
@@ -137,11 +140,11 @@ Funciones de la base: `invite_to_budget(email)` comparte el presupuesto con una 
 
 | Carpeta | Contenido |
 | --- | --- |
-| `src/helpers` | Funciones puras: formato de precios y distancias, ofertas, totales del presupuesto, tiendas, sedes cercanas y validaciones |
+| `src/helpers` | Funciones puras: formato de precios y distancias, ofertas, totales del presupuesto, tiendas, sedes cercanas, validación de mensajes y otras validaciones |
 | `src/context` | Contextos y proveedores de sesión, presupuesto, tiendas y preferencias |
 | `src/pages` | Una carpeta por pantalla con su `.tsx` y su `.module.scss` |
-| `src/components` | `shared` (encabezado, hoja, paso a paso, logos), `search` (`OfferCard`, filtros), `budget` (secciones por tienda, compartir), `map` (mapa y lista de sedes) y `auth` |
-| `src/hooks` | Hooks con estado: sesión, presupuesto en Supabase, compartidos, tiendas, métricas, búsqueda, red y push |
+| `src/components` | `shared` (encabezado, hoja, paso a paso, logos), `search` (`OfferCard`, filtros), `budget` (secciones por tienda, compartir, chat), `map` (mapa y lista de sedes) y `auth` |
+| `src/hooks` | Hooks con estado: sesión, presupuesto en Supabase, compartidos, chat, tiendas, métricas, búsqueda, red y push |
 | `src/routes` | `AppRoutes` (público o privado), `UserRoutes` (pestañas) y `AdminRoutes` (solo administrador) |
 | `src/services` | Clientes de la API de Comprice y de Supabase, copia local y push |
 
@@ -153,7 +156,8 @@ Funciones de la base: `invite_to_budget(email)` comparte el presupuesto con una 
 - Sin conexión: arranque en frío en modo avión con la última copia y la edición bloqueada.
 - Notificaciones: llegan con la app en segundo plano, abren el presupuesto al tocarlas y dejan de llegar al cerrar sesión.
 - Tiendas cercanas, en el navegador con la ubicación emulada en Cali: las 49 sedes en el mapa y en la lista por distancia, el enlace a Google Maps, una tienda desactivada (simulando la respuesta de `stores` en el navegador) que desaparece del mapa y de la lista, y el aviso cuando no hay permiso de ubicación. El APK con el permiso de ubicación compila con Gradle; falta probarlo en el celular.
-- Cada commit se verificó con `tsc` y ESLint; la compilación de Android con Gradle.
+- Chat: validación de mensajes cubierta con 5 pruebas unitarias, y el flujo de TypeScript, ESLint y build sin errores. La prueba con dos cuentas (envío en ambos sentidos, Realtime, caché sin conexión y RLS negativa) queda pendiente de aplicar la migración en Supabase.
+- Cada commit se verificó con `tsc` y ESLint; el chat además con Vitest y `npm run build`.
 
 ## 10. Limitaciones conocidas
 
@@ -163,3 +167,4 @@ Funciones de la base: `invite_to_budget(email)` comparte el presupuesto con una 
 - Con la app abierta las notificaciones no aparecen en la bandeja; los cambios se ven por tiempo real.
 - El rol de administrador solo se asigna desde Supabase.
 - Las sedes son las que existen en OpenStreetMap al 20 de noviembre de 2026 (49 en Cali); puede faltar alguna y muchas no tienen dirección registrada. Las teselas de OpenStreetMap son un servicio gratuito con política de uso justo; para mucho tráfico habría que cambiar `VITE_MAP_TILES_URL` a otro proveedor.
+- El chat muestra los últimos 100 mensajes y guarda 50 en el celular; no tiene adjuntos, edición, borrado ni notificaciones push propias.

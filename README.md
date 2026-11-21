@@ -18,7 +18,7 @@ Proyecto final: Comprice móvil, compara precios del mercado en Cali y comparte 
 
 ## Descripción
 
-Comprice móvil busca un producto en seis supermercados de Cali (Éxito, Carulla, Olímpica, Jumbo, D1 y Mercamío), ordena las ofertas por precio por kilo, litro o unidad, deja armar un presupuesto por tienda que se comparte en tiempo real con otras cuentas y muestra en un mapa las sedes más cercanas de las tiendas activas. Es una app de Ionic React con Capacitor para Android, con Supabase como backend (login, base de datos con reglas de acceso, tiempo real y notificaciones) y la API propia de Comprice para los precios.
+Comprice móvil busca un producto en seis supermercados de Cali (Éxito, Carulla, Olímpica, Jumbo, D1 y Mercamío), ordena las ofertas por precio por kilo, litro o unidad, deja armar un presupuesto por tienda que se comparte en tiempo real con otras cuentas, muestra en un mapa las sedes más cercanas de las tiendas activas y tiene un chat por presupuesto para coordinar la compra. Es una app de Ionic React con Capacitor para Android, con Supabase como backend (login, base de datos con reglas de acceso, tiempo real y notificaciones) y la API propia de Comprice para los precios.
 
 - Prototipo en Lovable: https://price-pick-budget-book.lovable.app (el prompt usado está en [`prototipo/prompt-lovable.md`](prototipo/prompt-lovable.md))
 - Documento de alcance y tecnologías: [`docs/alcance.md`](docs/alcance.md)
@@ -50,9 +50,9 @@ Notificaciones push en el celular:
 | --- | --- | --- |
 | API de Comprice (FastAPI propia) | `GET https://64.227.5.48.sslip.io/search` con `q`, `sort`, `stores`, `unit`, `min_price`, `max_price`, `min_price_per_unit` y `max_price_per_unit` | Buscar ofertas en las seis tiendas |
 | Supabase Auth | `signUp`, `signInWithPassword`, `signOut` y `onAuthStateChange` | Registro, inicio de sesión y sesión persistente |
-| Supabase Data API | Tablas `profiles`, `budget_items`, `budget_members`, `stores`, `store_locations`, `searches` y `push_tokens` | Perfiles, presupuestos, tiendas, sedes, métricas y tokens |
+| Supabase Data API | Tablas `profiles`, `budget_items`, `budget_members`, `budget_messages`, `stores`, `store_locations`, `searches` y `push_tokens` | Perfiles, presupuestos, chat, tiendas, sedes, métricas y tokens |
 | Supabase RPC | `invite_to_budget`, `save_push_token` y `admin_stats` | Compartir por correo, registrar el celular y métricas de admin |
-| Supabase Realtime | `postgres_changes` de `budget_items`, `budget_members` y `stores` | Presupuesto compartido y tiendas en vivo |
+| Supabase Realtime | `postgres_changes` de `budget_items`, `budget_members`, `budget_messages` y `stores` | Presupuesto compartido, chat y tiendas en vivo |
 | Supabase Edge Functions | `POST /functions/v1/send-push` | Avisar invitaciones y productos nuevos |
 | Firebase Cloud Messaging | HTTP v1 `messages:send` (desde la Edge Function) | Entregar las notificaciones push |
 | Teselas de OpenStreetMap | `GET https://tile.openstreetmap.org/{z}/{x}/{y}.png` | Dibujar el mapa de Tiendas cercanas |
@@ -90,7 +90,7 @@ En el navegador:
 npm run dev
 ```
 
-Abre http://localhost:5173, crea una cuenta y busca un producto. En la pestaña Tiendas el navegador pide la ubicación; si se niega, las distancias se miden desde el centro de Cali. Las vibraciones y las notificaciones push solo funcionan en el celular.
+Abre http://localhost:5173, crea una cuenta y busca un producto. En la pestaña Tiendas el navegador pide la ubicación; si se niega, las distancias se miden desde el centro de Cali. En el presupuesto, el botón de chat abre la conversación con las personas que tienen acceso. Las vibraciones y las notificaciones push solo funcionan en el celular.
 
 En el celular:
 
@@ -103,7 +103,7 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 Si el SDK está en WSL y el celular conectado a Windows, se instala con el `adb.exe` de Windows pasándole la ruta del APK en formato Windows (`wslpath -w`).
 
-Para ver el tiempo real, entra con una cuenta en el navegador y con otra en el celular, comparte el presupuesto por correo y cambia una cantidad. Para las notificaciones, deja la app del celular en segundo plano y agrega un producto nuevo desde la otra cuenta.
+Para ver el tiempo real, entra con una cuenta en el navegador y con otra en el celular, comparte el presupuesto por correo y cambia una cantidad o envía un mensaje en el chat. Para las notificaciones, deja la app del celular en segundo plano y agrega un producto nuevo desde la otra cuenta.
 
 ## Configuración
 
