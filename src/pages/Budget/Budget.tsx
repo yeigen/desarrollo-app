@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { IonAccordionGroup, IonButton, IonContent, IonPage, useIonAlert } from '@ionic/react'
-import { ArrowLeft, Share2, ShoppingBasket, Trash, TriangleAlert } from 'lucide-react'
+import { ArrowLeft, MessageCircle, Share2, ShoppingBasket, Trash, TriangleAlert } from 'lucide-react'
 import BudgetSummary from '../../components/budget/BudgetSummary'
+import ChatSheet from '../../components/budget/ChatSheet'
 import ShareSheet from '../../components/budget/ShareSheet'
 import StoreSection from '../../components/budget/StoreSection'
 import EmptyState from '../../components/shared/EmptyState'
@@ -20,6 +21,7 @@ function Budget() {
   const connected = useNetwork()
   const [presentAlert] = useIonAlert()
   const [shareOpen, setShareOpen] = useState(false)
+  const [chatOpen, setChatOpen] = useState(false)
   const [collapsed, setCollapsed] = useState<string[]>([])
 
   const isOwn = ownerId === user?.id
@@ -55,11 +57,16 @@ function Budget() {
           )
         }
         end={
-          isOwn && (
-            <IonButton fill="clear" color="primary" aria-label="Compartir" disabled={!connected} onClick={() => setShareOpen(true)}>
-              <Share2 size={20} />
+          <>
+            <IonButton fill="clear" color="primary" aria-label="Abrir chat" onClick={() => setChatOpen(true)}>
+              <MessageCircle size={20} />
             </IonButton>
-          )
+            {isOwn && (
+              <IonButton fill="clear" color="primary" aria-label="Compartir" disabled={!connected} onClick={() => setShareOpen(true)}>
+                <Share2 size={20} />
+              </IonButton>
+            )}
+          </>
         }
       />
       <IonContent>
@@ -107,6 +114,8 @@ function Budget() {
             </IonButton>
           </div>
         )}
+
+        <ChatSheet isOpen={chatOpen} ownerId={ownerId} people={people} onClose={() => setChatOpen(false)} />
 
         {isOwn && (
           <ShareSheet isOpen={shareOpen} ownerId={ownerId} people={people} onInvite={invite} onClose={() => setShareOpen(false)} />
