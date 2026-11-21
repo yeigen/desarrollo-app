@@ -9,7 +9,7 @@ export function usePluginCall() {
     try {
       await call()
     } catch (callError) {
-      if (!(callError instanceof CapacitorException)) throw callError
+      if (!(callError instanceof CapacitorException || callError instanceof GeolocationPositionError)) throw callError
       setError(callError.message)
     }
   }, [])
