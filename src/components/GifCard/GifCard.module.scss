@@ -1,0 +1,22 @@
+.card {
+  break-inside: avoid;
+  margin: 0 0 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--ion-color-step-100, #e6e6e6);
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  figcaption {
+    padding: 4px 8px 6px;
+    font-size: 12px;
+    color: var(--ion-color-medium);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

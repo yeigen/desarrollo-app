@@ -1,5 +1,7 @@
+import { Route } from 'react-router-dom'
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
+import Search from './pages/Search/Search'
 import '@ionic/react/css/core.css'
 import '@ionic/react/css/normalize.css'
 import '@ionic/react/css/structure.css'
@@ -19,7 +21,9 @@ function App() {
   return (
     <IonApp>
       <IonReactRouter>
-        <IonRouterOutlet />
+        <IonRouterOutlet>
+          <Route path="/" element={<Search />} />
+        </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>
   )
