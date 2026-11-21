@@ -4,8 +4,6 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
 
-// Node 26 deja window.localStorage indefinido en jsdom. Capacitor Preferences
-// lo usa en la web, asi que las pruebas necesitan una copia en memoria.
 if (typeof window !== 'undefined' && !window.localStorage) {
   const store = new Map<string, string>()
 
