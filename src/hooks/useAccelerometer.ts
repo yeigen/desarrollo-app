@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Motion, type Acceleration } from '@capacitor/motion'
 import { measureMotion } from '../utils/measureMotion'
 
@@ -18,7 +18,7 @@ export function useAccelerometer() {
     acceleration,
     motion: acceleration ? measureMotion(acceleration) : null,
     isListening,
-    start: () => setIsListening(true),
-    stop: () => setIsListening(false),
+    start: useCallback(() => setIsListening(true), []),
+    stop: useCallback(() => setIsListening(false), []),
   }
 }

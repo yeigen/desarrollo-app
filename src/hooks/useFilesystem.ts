@@ -19,7 +19,12 @@ export function useFilesystem() {
     run(loadFiles)
   }, [run, loadFiles])
 
-  const writeJson = (path: string, data: unknown) => run(async () => {
+  const readText = useCallback(async (path: string) => {
+    const result = await Filesystem.readFile({ path, directory: DIRECTORY, encoding: Encoding.UTF8 })
+    return String(result.data)
+  }, [])
+
+  const writeJson = useCallback((path: string, data: unknown) => run(async () => {
     await Filesystem.writeFile({
       path,
       data: JSON.stringify(data, null, 2),
@@ -27,11 +32,15 @@ export function useFilesystem() {
       encoding: Encoding.UTF8,
     })
     await loadFiles()
+  }), [run, loadFiles])
+
+  const writeBase64 = (path: string, data: string) => run(async () => {
+    await Filesystem.writeFile({ path, data, directory: DIRECTORY })
+    await loadFiles()
   })
 
   const readFile = (path: string) => run(async () => {
-    const result = await Filesystem.readFile({ path, directory: DIRECTORY, encoding: Encoding.UTF8 })
-    setContent(String(result.data))
+    setContent(await readText(path))
   })
 
   const deleteFile = (path: string) => run(async () => {
@@ -40,5 +49,5 @@ export function useFilesystem() {
     await loadFiles()
   })
 
-  return { files, content, error, writeJson, readFile, deleteFile }
+  return { files, content, error, readText, writeJson, writeBase64, readFile, deleteFile }
 }

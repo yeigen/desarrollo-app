@@ -14,7 +14,7 @@ function GeolocationPage() {
       <IonButton expand="block" onClick={getCurrentPosition}>
         Ubicación actual
       </IonButton>
-      <IonButton expand="block" fill="outline" onClick={isTracking ? stopTracking : startTracking}>
+      <IonButton expand="block" fill="outline" onClick={isTracking ? stopTracking : () => startTracking()}>
         {isTracking ? 'Detener seguimiento' : 'Seguir ubicación'}
       </IonButton>
       <IonList>

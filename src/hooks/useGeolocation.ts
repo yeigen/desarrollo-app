@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Geolocation, type Position } from '@capacitor/geolocation'
 import { usePluginCall } from './usePluginCall'
 
@@ -16,19 +16,21 @@ export function useGeolocation() {
     }
   }, [watchId])
 
-  const getCurrentPosition = () => run(async () => {
+  const getCurrentPosition = useCallback(() => run(async () => {
     setPosition(await Geolocation.getCurrentPosition(POSITION_OPTIONS))
-  })
+  }), [run])
 
-  const startTracking = () => run(async () => {
+  const startTracking = useCallback((onPosition?: (position: Position) => void) => run(async () => {
     const id = await Geolocation.watchPosition(POSITION_OPTIONS, (newPosition, watchError) => {
       if (watchError) setError(watchError.message)
-      if (newPosition) setPosition(newPosition)
+      if (!newPosition) return
+      setPosition(newPosition)
+      onPosition?.(newPosition)
     })
     setWatchId(id)
-  })
+  }), [run, setError])
 
-  const stopTracking = () => setWatchId('')
+  const stopTracking = useCallback(() => setWatchId(''), [])
 
   return { position, isTracking: watchId !== '', error, getCurrentPosition, startTracking, stopTracking }
 }
