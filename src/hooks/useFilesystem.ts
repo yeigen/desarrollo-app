@@ -43,11 +43,5 @@ export function useFilesystem() {
     setContent(await readText(path))
   })
 
-  const deleteFile = (path: string) => run(async () => {
-    await Filesystem.deleteFile({ path, directory: DIRECTORY })
-    setContent('')
-    await loadFiles()
-  })
-
-  return { files, content, error, readText, writeJson, writeBase64, readFile, deleteFile }
+  return { files, content, error, readText, writeJson, writeBase64, readFile }
 }

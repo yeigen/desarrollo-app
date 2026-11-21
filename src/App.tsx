@@ -1,15 +1,10 @@
 import { Navigate, Route } from 'react-router-dom'
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
-import CameraPage from './pages/CameraPage'
-import DevicePage from './pages/DevicePage'
-import FilesystemPage from './pages/FilesystemPage'
-import GeolocationPage from './pages/GeolocationPage'
-import HapticsPage from './pages/HapticsPage'
+import HistoryPage from './pages/HistoryPage'
 import Home from './pages/Home'
-import LocalNotificationsPage from './pages/LocalNotificationsPage'
-import MotionPage from './pages/MotionPage'
-import PushNotificationsPage from './pages/PushNotificationsPage'
+import MapPage from './pages/MapPage'
+import PhotoPage from './pages/PhotoPage'
 import '@ionic/react/css/core.css'
 import '@ionic/react/css/normalize.css'
 import '@ionic/react/css/structure.css'
@@ -31,14 +26,9 @@ function App() {
       <IonReactRouter>
         <IonRouterOutlet>
           <Route path="/home" element={<Home />} />
-          <Route path="/camera" element={<CameraPage />} />
-          <Route path="/device" element={<DevicePage />} />
-          <Route path="/filesystem" element={<FilesystemPage />} />
-          <Route path="/geolocation" element={<GeolocationPage />} />
-          <Route path="/haptics" element={<HapticsPage />} />
-          <Route path="/local-notifications" element={<LocalNotificationsPage />} />
-          <Route path="/motion" element={<MotionPage />} />
-          <Route path="/push-notifications" element={<PushNotificationsPage />} />
+          <Route path="/map" element={<MapPage />} />
+          <Route path="/history" element={<HistoryPage />} />
+          <Route path="/photo" element={<PhotoPage />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
         </IonRouterOutlet>
       </IonReactRouter>
