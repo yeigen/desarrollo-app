@@ -43,7 +43,7 @@ export function useTracking() {
 
   const [startedAt, setStartedAt] = useState<number | null>(null)
   const [sessions, setSessions] = useState<Session[]>([])
-  const [speedKmh, setSpeedKmh] = useState(0)
+  const [lastSpeedKmh, setSpeedKmh] = useState(0)
   const [now, setNow] = useState(() => Date.now())
   const [lastMotionAt, setLastMotionAt] = useState<number | null>(null)
   const [lastMoveAt, setLastMoveAt] = useState(() => Date.now())
@@ -55,6 +55,7 @@ export function useTracking() {
   const isTracking = startedAt !== null
   const isPaused = isTracking && isResting(lastMotionAt, now)
   const shouldWatch = isTracking && !isPaused
+  const speedKmh = isPaused ? 0 : lastSpeedKmh
 
   const notify = useCallback((alert: { title: string; body: string }) => {
     notifyNow(alert.title, alert.body)
