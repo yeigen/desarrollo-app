@@ -1,6 +1,7 @@
-describe('My First Test', () => {
-  it('Visits the app root url', () => {
+describe('Buscador de GIFs', () => {
+  it('abre la app con el buscador', () => {
     cy.visit('/')
-    cy.contains('#container', 'Ready to create an app?')
+    cy.contains('Buscador de GIFs')
+    cy.get('ion-searchbar').should('be.visible')
   })
 })
