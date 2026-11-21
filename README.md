@@ -45,7 +45,7 @@ El hook que busca, espera al usuario y cancela:
 | Archivo | Qué hace |
 | --- | --- |
 | `src/config.ts` | Único lugar que lee `import.meta.env.VITE_GIPHY_API_KEY` |
-| `src/services/giphy.ts` | Arma la URL de búsqueda (`limit` 25, `rating` g, `lang` es), llama a `fetch` con el `signal` y devuelve los GIFs con un tipo propio pequeño: `id`, `title`, `url`, `width` y `height` (GIPHY manda las medidas como texto) |
+| `src/services/giphy.ts` | Arma la URL de búsqueda (`limit` 25, `rating` g, `lang` es), llama a `fetch` con el `signal` y devuelve los GIFs con un tipo propio pequeño: `id`, `title`, `url`, `width` y `height` (GIPHY manda las medidas como texto). El total se limita a 5000 porque GIPHY no acepta un `offset` mayor a 4999 |
 | `src/hooks/useGifSearch.ts` | Guarda los GIFs, si está cargando y el error. Espera 500 ms sin cambios en el término, crea un `AbortController` por petición y lo aborta al cambiar de búsqueda o al desmontar la página. Un `AbortError` no se muestra como error |
 | `src/pages/Search/Search.tsx` | Buscador, mensajes de inicio, cargando, sin resultados y error, la grilla y el `IonInfiniteScroll` que pide la página siguiente con `offset` |
 | `src/components/GifGrid`, `src/components/GifCard` | Grilla en columnas y tarjeta con el GIF y su título |
@@ -112,7 +112,7 @@ npx eslint .
 npx tsc --noEmit
 ```
 
-Las pruebas mockean `fetch`: el servicio convierte la respuesta y falla con el estado HTTP, y el hook cancela la búsqueda anterior, no busca mientras se escribe y cancela al salir de la pantalla.
+Las pruebas mockean `fetch`: el servicio convierte la respuesta, limita el total paginable y falla con el estado HTTP; y el hook cancela la búsqueda anterior, no busca mientras se escribe y cancela al salir de la pantalla.
 
 ![Pruebas](imgs/pruebas.png)
 
