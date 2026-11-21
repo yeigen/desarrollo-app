@@ -38,6 +38,10 @@ Comprice móvil busca un producto en seis supermercados de Cali (Éxito, Carulla
 | --- | --- | --- | --- |
 | ![Métricas y tiendas](docs/img/admin.png) | ![Última copia guardada](docs/img/sin-conexion.png) | ![Mapa y sedes por distancia](docs/img/tiendas.png) | ![Sede en el mapa con el enlace a Google Maps](docs/img/tiendas-como-llegar.png) |
 
+| Chat del presupuesto | Chat en tiempo real |
+| --- | --- |
+| ![Conversación vista por la persona invitada](docs/img/chat.png) | ![El mismo mensaje en las dos cuentas sin recargar](docs/img/chat-tiempo-real.png) |
+
 Notificaciones push en el celular:
 
 ![Producto agregado a un presupuesto compartido](docs/img/notificacion-producto.png)
