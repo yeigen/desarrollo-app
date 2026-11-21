@@ -1,82 +1,77 @@
 # desarrollo-app
 
-Challenge 07: app de Ionic React con una página por cada sensor del celular, usando los plugins de Capacitor 8.
+Challenge 09: buscador de GIFs en Ionic React que consulta la API de búsqueda de GIPHY con `fetch`.
 
 ## Descripción
 
-Es una app nueva, creada vacía con `ionic start sensores blank --type=react --capacitor`. La página Home tiene un botón por sensor y cada botón abre una página que lo usa con su propio custom hook, como en la clase 07. Se probó en un Samsung Galaxy A15 con Android 16.
+Es un proyecto nuevo sobre la misma base del challenge 7 (Ionic React, Capacitor 8 y TypeScript), sin las páginas de sensores. Se escribe un término en el buscador y la app muestra los GIFs que devuelve `GET https://api.giphy.com/v1/gifs/search`; al llegar al final de la lista carga la página siguiente.
 
 Lo que pide el challenge y dónde está:
 
 | Pedido | Dónde |
 | --- | --- |
-| 1. Crear una app vacía | Commit `chore: crear la app ionic en blanco para el challenge 7` |
-| 2. Home con un botón por sensor | `src/pages/Home.tsx` |
-| 3. Una página por sensor | `src/pages/*Page.tsx`, cada una con su hook en `src/hooks/` |
+| 1. Crear una cuenta en developers.giphy.com y una App | App de tipo API creada en el panel de GIPHY; su key va en `.env.local` |
+| 2. Leer la documentación de la API | [Search endpoint](https://developers.giphy.com/docs/api/endpoint#search) y [esquema de respuesta](https://developers.giphy.com/docs/api/schema/) |
+| 3. Proyecto nuevo para buscar y mostrar GIFs | `src/pages/Search/Search.tsx`, con `src/components/GifGrid` y `src/components/GifCard` |
+| 4. Buscar escribiendo en un campo de texto | `IonSearchbar` en `Search.tsx`; el hook espera 500 ms sin escribir antes de buscar |
+| 5. Mostrar los GIFs en pantalla | `GifGrid` en dos columnas con la versión `fixed_width` (200 px de ancho) de cada GIF |
+| 6. API key en variables de entorno (`.env`) | `.env.local` (ignorado por git), `.env.example` versionado, tipado en `src/vite-env.d.ts` y leído solo en `src/config.ts` |
+| 7. Usar la API de búsqueda | `src/services/giphy.ts`: `searchGifs(term, offset, signal)` |
+| 8. Llamar la API con Fetch o Axios | `fetch` con `URLSearchParams`, como en la clase; no hace falta Axios para un solo `GET` |
+| Clase: cancelar con `AbortController` | `src/hooks/useGifSearch.ts`: cada búsqueda nueva o salir de la pantalla aborta la petición anterior |
 
 ## Capturas
 
-| Home | Cámara | Dispositivo | Archivos |
-| --- | --- | --- | --- |
-| ![Home](imgs/home.png) | ![Cámara](imgs/camara.png) | ![Dispositivo](imgs/dispositivo.png) | ![Archivos](imgs/archivos.png) |
-
-| Ubicación | Vibración | Notificaciones locales | Notificaciones push |
-| --- | --- | --- | --- |
-| ![Ubicación](imgs/ubicacion.png) | ![Vibración](imgs/vibracion.png) | ![Notificaciones locales](imgs/notificaciones-locales.png) | ![Notificaciones push](imgs/push-token.png) |
-
-| Movimiento (acelerómetro) |
-| --- |
-| ![Movimiento](imgs/movimiento.png) |
-
-Notificación local mostrada por la app:
-
-![Notificación local](imgs/notificacion-local.png)
-
-Notificación push enviada desde Firebase > Messaging con el token del dispositivo y la app en segundo plano:
-
-![Notificación push recibida](imgs/push-recibida.png)
-
-La vibración no se ve en una captura; Android registró las tres vibraciones de la app (impacto, notificación y la vibración de un segundo):
-
-![Registro de vibraciones](imgs/vibracion-registro.png)
-
-En las capturas se ocultaron el identificador del dispositivo, las coordenadas y el token de push.
-
-## Sensores
-
-| Página | Plugin | Qué hace |
+| Inicio | Búsqueda | Más resultados al bajar |
 | --- | --- | --- |
-| Cámara | `@capacitor/camera` | Abre la cámara (`takePhoto`) o la galería (`chooseFromGallery`) y muestra la foto |
-| Dispositivo | `@capacitor/device` | Modelo, fabricante, sistema, batería, si está cargando e identificador |
-| Archivos | `@capacitor/filesystem` | Guarda, lee y borra una nota JSON en la carpeta Documentos |
-| Ubicación | `@capacitor/geolocation` | Posición actual y seguimiento con `watchPosition` hasta detenerlo |
-| Vibración | `@capacitor/haptics` | Impactos ligero, medio y fuerte, notificaciones hápticas y una vibración de un segundo |
-| Notificaciones locales | `@capacitor/local-notifications` | Pide permiso, notifica al instante y programa un recordatorio a cinco segundos |
-| Movimiento | `@capacitor/motion` | Lee el acelerómetro y clasifica reposo, movimiento o sacudida |
-| Notificaciones push | `@capacitor/push-notifications` | Registra el dispositivo en Firebase Cloud Messaging y muestra el token |
+| ![Inicio](imgs/inicio.png) | ![Búsqueda](imgs/busqueda.png) | ![Scroll infinito](imgs/scroll.png) |
 
-Lo que se encontró al probar en el celular:
+| Cargando | Sin resultados | Error |
+| --- | --- | --- |
+| ![Cargando](imgs/cargando.png) | ![Sin resultados](imgs/vacio.png) | ![Error](imgs/error.png) |
 
-- `getPhoto` de la diapositiva está deprecado en `@capacitor/camera` 8.1; se usan `takePhoto` y `chooseFromGallery`.
-- El Galaxy A15 no tiene giroscopio, así que el WebView entrega `acceleration` en cero. Movimiento usa `accelerationIncludingGravity` y mide cuánto se aleja su magnitud de la gravedad (9.81 m/s²). Con mediciones reales, el reposo da 0.1 m/s² y una sacudida fuerte 10.5 m/s² de mediana; los umbrales quedaron en 2 (movimiento) y 10 (sacudida).
-- `Directory.Data` es la carpeta interna de la app, donde Firebase guarda sus propios archivos; por eso las notas van en `Directory.Documents`.
-- Desde `local-notifications` 8.3, una notificación que pide alarma exacta abre los ajustes de "Alarmas y recordatorios" si falta el permiso. La notificación inmediata va con `isExactNotification: false`.
+El error se forzó con Playwright respondiendo 429 (límite de peticiones) a la ruta de GIPHY.
+
+Cancelación: con la red retrasada 2 segundos desde Playwright, se escribió "perro", luego "gato" y luego "gato feliz", dejando pasar el debounce entre cada uno. Las dos primeras peticiones quedaron abortadas (`net::ERR_ABORTED`) y solo la última llegó a la pantalla. El panel oscuro lo dibujó Playwright con los eventos de red de la página y solo muestra el parámetro `q`:
+
+![Cancelación de búsquedas](imgs/cancelacion.png)
+
+El hook que busca, espera al usuario y cancela:
+
+![useGifSearch](imgs/codigo-hook.png)
+
+## Cómo funciona
+
+| Archivo | Qué hace |
+| --- | --- |
+| `src/config.ts` | Único lugar que lee `import.meta.env.VITE_GIPHY_API_KEY` |
+| `src/services/giphy.ts` | Arma la URL de búsqueda (`limit` 25, `rating` g, `lang` es), llama a `fetch` con el `signal` y devuelve los GIFs con un tipo propio pequeño: `id`, `title`, `url`, `width` y `height` (GIPHY manda las medidas como texto) |
+| `src/hooks/useGifSearch.ts` | Guarda los GIFs, si está cargando y el error. Espera 500 ms sin cambios en el término, crea un `AbortController` por petición y lo aborta al cambiar de búsqueda o al desmontar la página. Un `AbortError` no se muestra como error |
+| `src/pages/Search/Search.tsx` | Buscador, mensajes de inicio, cargando, sin resultados y error, la grilla y el `IonInfiniteScroll` que pide la página siguiente con `offset` |
+| `src/components/GifGrid`, `src/components/GifCard` | Grilla en columnas y tarjeta con el GIF y su título |
+
+La atribución "Powered by GIPHY" va fija en el pie, como exige GIPHY a toda app que use su API.
 
 ## Requisitos
 
 - Node.js 24
-- JDK 21 (en Ubuntu, `openjdk-21-jdk-headless`; el JRE no alcanza para compilar)
-- Android SDK con `platforms;android-36`, `build-tools;36.0.0` y `platform-tools`
-- Un celular Android con la depuración por USB activada
-- El proyecto de Firebase `desarrollo-app-a610b`, con la app Android `com.yeigen.sensores`, para las notificaciones push
+- Una API key de GIPHY (developers.giphy.com > Create an App > API)
+- Para el APK: JDK 21 y Android SDK con `platforms;android-36` y `build-tools;36.0.0`
 
 ## Instalación
 
 ```bash
 npm install
+cp .env.example .env.local
 ```
 
-En `android/local.properties` (ignorado por git) va la ruta del SDK:
+En `.env.local` se pega la key después del `=`:
+
+```
+VITE_GIPHY_API_KEY=<tu key de GIPHY>
+```
+
+Para Android, en `android/local.properties` (ignorado por git) va la ruta del SDK:
 
 ```
 sdk.dir=/home/<usuario>/Android/Sdk
@@ -84,11 +79,13 @@ sdk.dir=/home/<usuario>/Android/Sdk
 
 ## Uso
 
-En el navegador, para la interfaz (Dispositivo y Ubicación funcionan con las APIs web; el resto necesita el celular):
+En el navegador:
 
 ```bash
 npm run dev
 ```
+
+Se abre `http://localhost:5173`, se escribe un término (por ejemplo "gatos") y a medio segundo aparecen los GIFs. Al bajar hasta el final se cargan 25 más.
 
 En el celular:
 
@@ -99,16 +96,27 @@ cd android && ./gradlew assembleDebug
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-Si el SDK está en WSL y el celular conectado a Windows, se instala con el `adb.exe` de Windows pasándole la ruta de Windows del APK (`wslpath -w`).
+## Configuración
 
-Para probar las notificaciones push: en la página Notificaciones push, pulsa "Activar notificaciones push" y copia el token. En Firebase > Messaging, crea una campaña de Notificaciones, escribe el título y el texto, pulsa "Enviar mensaje de prueba", pega el token y pulsa "Probar".
+| Variable | Para qué |
+| --- | --- |
+| `VITE_GIPHY_API_KEY` | API key de la App de GIPHY |
+
+Vite inserta las variables `VITE_` en el JavaScript que llega al navegador, así que la key queda visible en la app compilada. Es lo esperado para una key de cliente de GIPHY; lo que se evita es subirla al repositorio. La key de prueba (beta) admite 100 peticiones por hora.
 
 ## Pruebas
 
 ```bash
 npx vitest run
-npm run lint
+npx eslint .
+npx tsc --noEmit
 ```
+
+Las pruebas mockean `fetch`: el servicio convierte la respuesta y falla con el estado HTTP, y el hook cancela la búsqueda anterior, no busca mientras se escribe y cancela al salir de la pantalla.
+
+![Pruebas](imgs/pruebas.png)
+
+![Verificación](imgs/verificacion.png)
 
 ## Contribuir
 
