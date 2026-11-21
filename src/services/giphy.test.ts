@@ -23,6 +23,14 @@ test('convierte la respuesta de GIPHY en GIFs con medidas numéricas', async () 
   })
 })
 
+test('limita el total a los resultados que GIPHY deja paginar', async () => {
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ data: [], pagination: { total_count: 250000 } })))
+
+  const page = await searchGifs('gato', 0, new AbortController().signal)
+
+  expect(page.total).toBe(5000)
+})
+
 test('falla con el estado HTTP cuando GIPHY rechaza la petición', async () => {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 429 })))
 

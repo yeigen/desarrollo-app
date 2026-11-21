@@ -2,6 +2,7 @@ import { GIPHY_API_KEY } from '../config'
 
 const SEARCH_URL = 'https://api.giphy.com/v1/gifs/search'
 export const PAGE_SIZE = 25
+const MAX_OFFSET = 4999
 
 export interface Gif {
   id: string
@@ -47,6 +48,6 @@ export async function searchGifs(term: string, offset: number, signal: AbortSign
       width: Number(images.fixed_width.width),
       height: Number(images.fixed_width.height),
     })),
-    total: body.pagination.total_count,
+    total: Math.min(body.pagination.total_count, MAX_OFFSET + 1),
   }
 }
