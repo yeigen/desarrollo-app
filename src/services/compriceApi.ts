@@ -1,4 +1,5 @@
 import { COMPRICE_API_URL } from '../config'
+import { supabase } from './supabase'
 
 export type Unit = 'g' | 'ml' | 'un'
 
@@ -61,7 +62,11 @@ export async function searchOffers(query: string, filters: SearchFilters): Promi
     if (value) params.set(name, value)
   })
 
-  const response = await fetch(`${COMPRICE_API_URL}/search?${params}`)
+  const { data } = await supabase.auth.getSession()
+  const token = data.session?.access_token
+  const response = await fetch(`${COMPRICE_API_URL}/search?${params}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  })
   if (!response.ok) throw new Error(`La API respondió ${response.status}`)
   return response.json()
 }
